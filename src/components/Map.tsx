@@ -1,5 +1,5 @@
-'use client';
-// components/Map.tsx
+'use client'
+
 import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -9,6 +9,8 @@ import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
+import MarkerForm from './Markerform';  // Importamos el componente de formulario
+
 const DefaultIcon = L.icon({
   iconUrl: icon.src,
   shadowUrl: iconShadow.src,
@@ -16,11 +18,10 @@ const DefaultIcon = L.icon({
 
 L.Marker.prototype.options.icon = DefaultIcon;
 
-// Componente para manejar el evento de clic en el mapa
-const MapClickHandler = ({ setMarkerPosition }: { setMarkerPosition: (pos: [number, number]) => void }) => {
+const MapClickHandler = ({ onClick }: { onClick: (pos: [number, number]) => void }) => {
   useMapEvents({
     click(e) {
-      setMarkerPosition([e.latlng.lat, e.latlng.lng]);
+      onClick([e.latlng.lat, e.latlng.lng]);
     },
   });
 
@@ -29,12 +30,28 @@ const MapClickHandler = ({ setMarkerPosition }: { setMarkerPosition: (pos: [numb
 
 const Map = () => {
   const [isClient, setIsClient] = useState(false);
-  const [markerPosition, setMarkerPosition] = useState<[number, number] | null>(null);
+  const [formPosition, setFormPosition] = useState<[number, number] | null>(null);
+  const [markers, setMarkers] = useState<{ position: [number, number]; title: string; description: string; tag: string }[]>([]);
 
-  // Nos aseguramos de que el componente solo se renderice en el cliente
   useEffect(() => {
     setIsClient(true);
   }, []);
+
+  const handleMapClick = (position: [number, number]) => {
+    setFormPosition(position); // Mostrar el formulario en la posición clicada
+  };
+
+  const handleFormSubmit = (data: { title: string; description: string; tag: string }) => {
+    if (formPosition) {
+      // Agregar el nuevo marcador
+      setMarkers([...markers, { position: formPosition, title: data.title, description: data.description, tag: data.tag }]);
+      setFormPosition(null); // Cerrar el formulario
+    }
+  };
+
+  const handleFormCancel = () => {
+    setFormPosition(null); // Cerrar el formulario sin hacer nada
+  };
 
   if (!isClient) {
     return null;
@@ -53,17 +70,26 @@ const Map = () => {
         />
         
         {/* Manejador de clic en el mapa */}
-        <MapClickHandler setMarkerPosition={setMarkerPosition} />
+        <MapClickHandler onClick={handleMapClick} />
 
-        {/* Mostrar el marcador si existe una posición */}
-        {markerPosition && (
-          <Marker position={markerPosition}>
+        {/* Mostrar los marcadores existentes */}
+        {markers.map((marker, idx) => (
+          <Marker key={idx} position={marker.position}>
             <Popup>
-              Marcador en {markerPosition[0]}, {markerPosition[1]}.
+              <strong>{marker.title}</strong>
+              <p>{marker.description}</p>
+              <small>{marker.tag}</small>
             </Popup>
           </Marker>
-        )}
+        ))}
       </MapContainer>
+
+      {/* Mostrar el formulario cuando formPosition no es null */}
+      <MarkerForm
+        position={formPosition}
+        onSubmit={handleFormSubmit}
+        onCancel={handleFormCancel}
+      />
     </div>
   );
 };
