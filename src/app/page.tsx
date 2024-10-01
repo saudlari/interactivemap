@@ -17,11 +17,10 @@ export default function Home() {
 
   return (
     <div className="relative flex flex-col h-screen">
-      {/* Navbar fijo */}
+      {/* Navbar transparente con botones */}
       <Navbar toggleVerticalNav={toggleVerticalNav} />
 
-      <div className="flex-1 relative pt-16"> {/* Asegura que el mapa no cubra el Navbar */}
-        
+      <div className="flex-1 relative">
         {/* VerticalNav sobre el mapa */}
         {showVerticalNav && (
           <div className="absolute top-0 left-0 z-40 w-64 h-full bg-gray-100 shadow-lg">
