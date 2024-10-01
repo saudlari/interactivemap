@@ -58,7 +58,7 @@ const Map = () => {
   }
 
   return (
-    <div className="relati" style={{ height: '100vh', width: '100%' }}>
+    <div style={{ height: '100vh', width: '100%' }}>
       <MapContainer
         center={[36.7213, -4.4214]} // Coordenadas iniciales (Málaga, España)
         zoom={13}
