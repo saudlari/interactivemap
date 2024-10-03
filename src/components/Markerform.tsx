@@ -2,78 +2,101 @@ import React, { useState } from 'react';
 
 interface MarkerFormProps {
   position: [number, number] | null;
-  onSubmit: (data: { title: string; description: string; tag: string }) => void;
+  onSubmit: (data: { title: string; description: string; tag: string; imageFile: File | null }) => void;
   onCancel: () => void;
 }
 
 const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel }) => {
-  const [formData, setFormData] = useState({ title: '', description: '', tag: '' });
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    tag: '',
+    imageFile: null as File | null,
+  });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setFormData({ ...formData, imageFile: e.target.files[0] });
+    }
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);  // Enviar los datos al componente de mapa
-    setFormData({ title: '', description: '', tag: '' }); // Reiniciar el formulario
+    onSubmit(formData); // Enviar los datos incluyendo el archivo
+    setFormData({ title: '', description: '', tag: '', imageFile: null }); // Reiniciar el formulario
   };
 
   if (!position) return null;
 
   return (
-    <div style={{
-      position: 'absolute',
-      top: 100,
-      left: 100,
-      zIndex: 1000,
-      backgroundColor: 'white',
-      padding: '1rem',
-      borderRadius: '8px',
-      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-    }}>
-      <h3>Agregar Marcador</h3>
-      <p>Coordenadas: {position[0]}, {position[1]}</p>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Título:</label>
+    <div className="marker-form-container">
+      <h3 className="marker-form-title">Agregar Marcador</h3>
+      <p className="marker-form-coordinates">Coordenadas: {position[0]}, {position[1]}</p>
+      <form onSubmit={handleSubmit} className="marker-form">
+        <div className="marker-form-group">
+          <label htmlFor="title" className="marker-form-label">Título:</label>
           <input
             type="text"
+            id="title"
             name="title"
             value={formData.title}
             onChange={handleInputChange}
             required
-            style={{ width: '100%', padding: '0.5rem', marginBottom: '1rem' }}
+            className="marker-form-input"
           />
         </div>
-        <div>
-          <label>Descripción:</label>
+        <div className="marker-form-group">
+          <label htmlFor="description" className="marker-form-label">Descripción:</label>
           <textarea
+            id="description"
             name="description"
             value={formData.description}
             onChange={handleInputChange}
             required
-            style={{ width: '100%', padding: '0.5rem', marginBottom: '1rem' }}
+            className="marker-form-input"
           />
         </div>
-        <div>
-          <label>Tag:</label>
+        <div className="marker-form-group">
+          <label htmlFor="tag" className="marker-form-label">Tag:</label>
           <input
             type="text"
+            id="tag"
             name="tag"
             value={formData.tag}
             onChange={handleInputChange}
             required
-            style={{ width: '100%', padding: '0.5rem', marginBottom: '1rem' }}
+            className="marker-form-input"
           />
         </div>
-        <button type="submit" style={{ padding: '0.5rem 1rem', backgroundColor: '#007bff', color: 'white', borderRadius: '4px' }}>
-          Crear marcador
-        </button>
-        <button type="button" onClick={onCancel} style={{ padding: '0.5rem 1rem', backgroundColor: '#ccc', marginLeft: '1rem', borderRadius: '4px' }}>
-          Cancelar
-        </button>
+        <div className="marker-form-group">
+          <label htmlFor="file" className="marker-form-label">Subir Imagen o Archivo:</label>
+          <input
+            type="file"
+            id="file"
+            onChange={handleFileChange}
+            className="marker-form-input"
+          />
+        </div>
+        <div className="marker-form-actions">
+          <button
+            type="button"
+            onClick={onCancel}
+            className="marker-form-button marker-form-button-cancel"
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            className="marker-form-button marker-form-button-submit"
+          >
+            Crear marcador
+          </button>
+        </div>
       </form>
     </div>
   );

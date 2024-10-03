@@ -1,3 +1,4 @@
+/* Estilos base de Tailwind (si los estás utilizando) */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -7,6 +8,7 @@
   --foreground: #171717;
 }
 
+/* Estilo para dark mode */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -20,8 +22,149 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Input y textarea personalizados */
+input,
+textarea {
+  color: #2e2b2bd3;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+/* Sidebar (si es parte de tu app) */
+.sidebar {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid #e5e7eb;
+  background-color: white;
+}
+
+.sidebar-header {
+  padding: 1.5rem 1rem;
+}
+
+.logo {
+  display: grid;
+  height: 2.5rem;
+  width: 8rem;
+  place-content: center;
+  border-radius: 0.5rem;
+  background-color: #f3f4f6;
+  font-size: 0.75rem;
+  color: #4b5563;
+}
+
+/* MarkerForm - Diseño del formulario */
+
+/* Contenedor general del formulario */
+.marker-form-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+  background-color: #f9fafb;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 400px;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: all 0.3s ease;
+}
+
+/* Título del formulario */
+.marker-form-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #333;
+}
+
+/* Coordenadas */
+.marker-form-coordinates {
+  text-align: center;
+  color: #555;
+  font-size: 0.875rem;
+  margin-bottom: 1rem;
+}
+
+/* Grupo de formulario (label + input) */
+.marker-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Etiquetas */
+.marker-form-label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Entradas de texto y archivo */
+.marker-form-input {
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.marker-form-input:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+/* Botones del formulario */
+.marker-form-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.marker-form-button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Botón de cancelar */
+.marker-form-button-cancel {
+  background-color: #ccc;
+  color: #333;
+}
+
+.marker-form-button-cancel:hover {
+  background-color: #bbb;
+}
+
+/* Botón de enviar */
+.marker-form-button-submit {
+  background-color: #007bff;
+  color: white;
+}
+
+.marker-form-button-submit:hover {
+  background-color: #0056b3;
+}
+
+/* Mejorar el diseño de las áreas de texto */
+textarea.marker-form-input {
+  resize: vertical;
 }

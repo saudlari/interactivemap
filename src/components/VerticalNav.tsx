@@ -2,9 +2,9 @@ import React from "react";
 
 const Sidebar: React.FC = () => {
   return (
-    <div className="flex h-screen flex-col justify-between border-e bg-white">
-      <div className="px-4 py-6">
-        <span className="grid h-10 w-32 place-content-center rounded-lg bg-gray-100 text-xs text-gray-600">
+    <div className="sidebar">
+      <div className="sidebar-header">
+        <span className="logo">
           Logo
         </span>
 

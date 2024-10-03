@@ -31,7 +31,7 @@ const MapClickHandler = ({ onClick }: { onClick: (pos: [number, number]) => void
 const Map = () => {
   const [isClient, setIsClient] = useState(false);
   const [formPosition, setFormPosition] = useState<[number, number] | null>(null);
-  const [markers, setMarkers] = useState<{ position: [number, number]; title: string; description: string; tag: string }[]>([]);
+  const [markers, setMarkers] = useState<{ position: [number, number]; title: string; description: string; tag: string; imageFile?: File | null }[]>([]);
 
   useEffect(() => {
     setIsClient(true);
@@ -41,10 +41,10 @@ const Map = () => {
     setFormPosition(position); // Mostrar el formulario en la posición clicada
   };
 
-  const handleFormSubmit = (data: { title: string; description: string; tag: string }) => {
+  const handleFormSubmit = (data: { title: string; description: string; tag: string; imageFile: File | null }) => {
     if (formPosition) {
       // Agregar el nuevo marcador
-      setMarkers([...markers, { position: formPosition, title: data.title, description: data.description, tag: data.tag }]);
+      setMarkers([...markers, { position: formPosition, title: data.title, description: data.description, tag: data.tag, imageFile: data.imageFile }]);
       setFormPosition(null); // Cerrar el formulario
     }
   };
@@ -79,6 +79,14 @@ const Map = () => {
               <strong>{marker.title}</strong>
               <p>{marker.description}</p>
               <small>{marker.tag}</small>
+              {/* Mostrar imagen si fue subida */}
+              {marker.imageFile && (
+                <img
+                  src={URL.createObjectURL(marker.imageFile)}
+                  alt={marker.title}
+                  style={{ maxWidth: '100%', maxHeight: '150px', marginTop: '1rem' }}
+                />
+              )}
             </Popup>
           </Marker>
         ))}
