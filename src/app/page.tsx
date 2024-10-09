@@ -15,6 +15,10 @@ export default function Home() {
     setShowVerticalNav(!showVerticalNav);  // Cambiar el estado de mostrar/ocultar VerticalNav
   };
 
+  const handleFilterChange = (filter: string) => {
+    // Implement your filter change logic here
+  };
+
   return (
     <div className="relative flex flex-col h-screen">
       {/* Navbar transparente con botones */}
@@ -24,7 +28,7 @@ export default function Home() {
         {/* VerticalNav sobre el mapa */}
         {showVerticalNav && (
           <div className="absolute top-0 left-0 z-40 w-64 h-full bg-gray-100 shadow-lg">
-            <VerticalNav />
+            <VerticalNav onFilterChange={handleFilterChange} />
           </div>
         )}
 

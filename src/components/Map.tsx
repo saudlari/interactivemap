@@ -5,7 +5,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaf
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
-// Importa los iconos predeterminados de Leaflet
+// Importamos los iconos predeterminados de Leaflet y corregimos el problema del ícono en Next.js.
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
@@ -31,7 +31,7 @@ const MapClickHandler = ({ onClick }: { onClick: (pos: [number, number]) => void
 const Map = () => {
   const [isClient, setIsClient] = useState(false);
   const [formPosition, setFormPosition] = useState<[number, number] | null>(null);
-  const [markers, setMarkers] = useState<{ position: [number, number]; title: string; description: string; tag: string; category: string; subcategory: string; imageFile?: File | null }[]>([]);
+  const [markers, setMarkers] = useState<{ position: [number, number]; title: string; description: string; tag: string; imageFile?: File | null }[]>([]);
 
   useEffect(() => {
     setIsClient(true);
@@ -41,10 +41,10 @@ const Map = () => {
     setFormPosition(position); // Mostrar el formulario en la posición clicada
   };
 
-  const handleFormSubmit = (data: { title: string; description: string; tag: string; category: string; subcategory: string; imageFile: File | null }) => {
+  const handleFormSubmit = (data: { title: string; description: string; tag: string; imageFile: File | null }) => {
     if (formPosition) {
       // Agregar el nuevo marcador
-      setMarkers([...markers, { position: formPosition, title: data.title, description: data.description, tag: data.tag, category: data.category, subcategory: data.subcategory, imageFile: data.imageFile }]);
+      setMarkers([...markers, { position: formPosition, title: data.title, description: data.description, tag: data.tag, imageFile: data.imageFile }]);
       setFormPosition(null); // Cerrar el formulario
     }
   };
@@ -79,8 +79,6 @@ const Map = () => {
               <strong>{marker.title}</strong>
               <p>{marker.description}</p>
               <small>{marker.tag}</small>
-              <p>Categoría: {marker.category}</p>
-              <p>Subcategoría: {marker.subcategory}</p>
               {/* Mostrar imagen si fue subida */}
               {marker.imageFile && (
                 <img
