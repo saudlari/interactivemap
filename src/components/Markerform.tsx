@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 interface MarkerFormProps {
   position: [number, number] | null;
-  onSubmit: (data: { title: string; description: string; tag: string; imageFile: File | null }) => void;
+  onSubmit: (data: { title: string; description: string; tag: string; imageFile: File | null; category: string; subcategory: string; }) => void;
   onCancel: () => void;
 }
 
@@ -12,9 +12,11 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
     description: '',
     tag: '',
     imageFile: null as File | null,
+    category: 'Conflictos', // Default category
+    subcategory: 'Medio Ambiente', // Default subcategory
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
@@ -28,7 +30,7 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData); // Enviar los datos incluyendo el archivo
-    setFormData({ title: '', description: '', tag: '', imageFile: null }); // Reiniciar el formulario
+    setFormData({ title: '', description: '', tag: '', imageFile: null, category: 'Conflictos', subcategory: 'Medio Ambiente' }); // Reiniciar el formulario
   };
 
   if (!position) return null;
@@ -81,6 +83,41 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
             onChange={handleFileChange}
             className="marker-form-input"
           />
+        </div>
+        <div className="marker-form-group">
+          <label htmlFor="category" className="marker-form-label">Categoría:</label>
+          <select
+            id="category"
+            name="category"
+            value={formData.category}
+            onChange={handleInputChange}
+            className="marker-form-input"
+          >
+            <option value="Conflictos">Conflictos</option>
+            <option value="Propuestas">Propuestas</option>
+            <option value="Iniciativas">Iniciativas</option>
+          </select>
+        </div>
+        <div className="marker-form-group">
+          <label htmlFor="subcategory" className="marker-form-label">Subcategoría:</label>
+          <select
+            id="subcategory"
+            name="subcategory"
+            value={formData.subcategory}
+            onChange={handleInputChange}
+            className="marker-form-input"
+          >
+            <option value="Medio Ambiente">Medio Ambiente</option>
+            <option value="Feminismos">Feminismos</option>
+            <option value="Servicios Publicos">Servicios Públicos</option>
+            <option value="Vivienda">Vivienda</option>
+            <option value="Urbanismo">Urbanismo</option>
+            <option value="Movilidad">Movilidad</option>
+            <option value="Cultura">Cultura</option>
+            <option value="Economia y empleo">Economía y empleo</option>
+            <option value="Deporte">Deporte</option>
+            <option value="Memoria democrática">Memoria democrática</option>
+          </select>
         </div>
         <div className="marker-form-actions">
           <button
