@@ -31,7 +31,7 @@ const MapClickHandler = ({ onClick }: { onClick: (pos: [number, number]) => void
 const Map = () => {
   const [isClient, setIsClient] = useState(false);
   const [formPosition, setFormPosition] = useState<[number, number] | null>(null);
-  const [markers, setMarkers] = useState<{ position: [number, number]; title: string; description: string; tag: string; imageFile?: File | null }[]>([]);
+  const [markers, setMarkers] = useState<{ position: [number, number]; title: string; description: string; tag: string; category: string; subcategory: string; imageFile?: File | null }[]>([]);
 
   useEffect(() => {
     setIsClient(true);
@@ -41,10 +41,10 @@ const Map = () => {
     setFormPosition(position); // Mostrar el formulario en la posición clicada
   };
 
-  const handleFormSubmit = (data: { title: string; description: string; tag: string; imageFile: File | null }) => {
+  const handleFormSubmit = (data: { title: string; description: string; tag: string; category: string; subcategory: string; imageFile: File | null }) => {
     if (formPosition) {
       // Agregar el nuevo marcador
-      setMarkers([...markers, { position: formPosition, title: data.title, description: data.description, tag: data.tag, imageFile: data.imageFile }]);
+      setMarkers([...markers, { position: formPosition, title: data.title, description: data.description, tag: data.tag, category: data.category, subcategory: data.subcategory, imageFile: data.imageFile }]);
       setFormPosition(null); // Cerrar el formulario
     }
   };
@@ -58,11 +58,11 @@ const Map = () => {
   }
 
   return (
-    <div style={{ height: '100vh', width: '100%' }}>
+    <div className="relative h-screen w-full">
       <MapContainer
         center={[36.7213, -4.4214]} // Coordenadas iniciales (Málaga, España)
         zoom={13}
-        style={{ height: '100%', width: '100%' }}
+        className="w-full h-full rounded-lg shadow-lg"
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -76,28 +76,33 @@ const Map = () => {
         {markers.map((marker, idx) => (
           <Marker key={idx} position={marker.position}>
             <Popup>
-              <strong>{marker.title}</strong>
-              <p>{marker.description}</p>
-              <small>{marker.tag}</small>
-              {/* Mostrar imagen si fue subida */}
-              {marker.imageFile && (
-                <img
-                  src={URL.createObjectURL(marker.imageFile)}
-                  alt={marker.title}
-                  style={{ maxWidth: '100%', maxHeight: '150px', marginTop: '1rem' }}
-                />
-              )}
+              <div className="text-center">
+                <strong className="text-lg font-bold">{marker.title}</strong>
+                <p className="text-sm text-gray-600">{marker.description}</p>
+                <small className="text-xs text-gray-400 italic">{marker.tag}</small>
+                <p className="text-sm text-gray-500">{marker.category} - {marker.subcategory}</p>
+                {/* Mostrar imagen si fue subida */}
+                {marker.imageFile && (
+                  <img
+                    src={URL.createObjectURL(marker.imageFile)}
+                    alt={marker.title}
+                    className="w-full max-h-40 mt-2 rounded-lg shadow-md object-cover"
+                  />
+                )}
+              </div>
             </Popup>
           </Marker>
         ))}
       </MapContainer>
 
       {/* Mostrar el formulario cuando formPosition no es null */}
-      <MarkerForm
-        position={formPosition}
-        onSubmit={handleFormSubmit}
-        onCancel={handleFormCancel}
-      />
+      {formPosition && (
+        <MarkerForm
+          position={formPosition}
+          onSubmit={handleFormSubmit}
+          onCancel={handleFormCancel}
+        />
+      )}
     </div>
   );
 };

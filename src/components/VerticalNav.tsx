@@ -25,7 +25,7 @@ const VerticalNav: React.FC<VerticalNavProps> = ({ onFilterChange }) => {
         <span className="logo">Logo</span>
 
         <ul className="mt-6 space-y-1">
-          <li className="text-lg font-bold">Categorías</li>
+          <li className="text-lg font-bold ml-4">Categorías</li>
           <li>
             <button
               onClick={() => handleCategoryClick('Conflictos')}
@@ -57,7 +57,7 @@ const VerticalNav: React.FC<VerticalNavProps> = ({ onFilterChange }) => {
             </button>
           </li>
 
-          <li className="text-lg font-bold mt-4">Subcategorías</li>
+          <li className="text-lg font-bold ml-4">Subcategorías</li>
           <li>
             <button
               onClick={() => handleSubcategoryClick('Medio Ambiente')}
