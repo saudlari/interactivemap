@@ -5,18 +5,21 @@ interface VerticalNavProps {
 }
 
 const VerticalNav: React.FC<VerticalNavProps> = ({ onFilterChange }) => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [selectedSubcategory, setSelectedSubcategory] = useState<string>("");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]); // Cambiado a un arreglo
+  const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([]); // Cambiado a un arreglo
 
   const handleCategoryClick = (category: string) => {
-    setSelectedCategory(category);
-    setSelectedSubcategory(""); // Resetear subcategoría al cambiar categoría
+    setSelectedCategories(prev => 
+      prev.includes(category) ? prev.filter(c => c !== category) : [...prev, category]
+    ); // Agregar o eliminar categoría
     onFilterChange(category, ""); // Llamar a la función para cambiar el filtro
   };
 
   const handleSubcategoryClick = (subcategory: string) => {
-    setSelectedSubcategory(subcategory);
-    onFilterChange(selectedCategory, subcategory); // Llamar a la función para cambiar el filtro
+    setSelectedSubcategories(prev => 
+      prev.includes(subcategory) ? prev.filter(s => s !== subcategory) : [...prev, subcategory]
+    ); // Agregar o eliminar subcategoría
+    onFilterChange(selectedCategories.join(','), subcategory); // Llamar a la función para cambiar el filtro
   };
 
   return (
@@ -30,7 +33,7 @@ const VerticalNav: React.FC<VerticalNavProps> = ({ onFilterChange }) => {
             <button
               onClick={() => handleCategoryClick('Conflictos')}
               className={`block rounded-lg px-4 py-2 text-sm font-medium ${
-                selectedCategory === 'Conflictos' ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                selectedCategories.includes('Conflictos') ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
               }`}
             >
               Conflictos
@@ -40,7 +43,7 @@ const VerticalNav: React.FC<VerticalNavProps> = ({ onFilterChange }) => {
             <button
               onClick={() => handleCategoryClick('Propuestas')}
               className={`block rounded-lg px-4 py-2 text-sm font-medium ${
-                selectedCategory === 'Propuestas' ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                selectedCategories.includes('Propuestas') ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
               }`}
             >
               Propuestas
@@ -50,7 +53,7 @@ const VerticalNav: React.FC<VerticalNavProps> = ({ onFilterChange }) => {
             <button
               onClick={() => handleCategoryClick('Iniciativas')}
               className={`block rounded-lg px-4 py-2 text-sm font-medium ${
-                selectedCategory === 'Iniciativas' ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                selectedCategories.includes('Iniciativas') ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
               }`}
             >
               Iniciativas
@@ -62,7 +65,7 @@ const VerticalNav: React.FC<VerticalNavProps> = ({ onFilterChange }) => {
             <button
               onClick={() => handleSubcategoryClick('Medio Ambiente')}
               className={`block rounded-lg px-4 py-2 text-sm font-medium ${
-                selectedSubcategory === 'Medio Ambiente' ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                selectedSubcategories.includes('Medio Ambiente') ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
               }`}
             >
               Medio Ambiente
@@ -72,7 +75,7 @@ const VerticalNav: React.FC<VerticalNavProps> = ({ onFilterChange }) => {
             <button
               onClick={() => handleSubcategoryClick('Feminismos')}
               className={`block rounded-lg px-4 py-2 text-sm font-medium ${
-                selectedSubcategory === 'Feminismos' ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                selectedSubcategories.includes('Feminismos') ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
               }`}
             >
               Feminismos
@@ -82,7 +85,7 @@ const VerticalNav: React.FC<VerticalNavProps> = ({ onFilterChange }) => {
             <button
               onClick={() => handleSubcategoryClick('Servicios Públicos')}
               className={`block rounded-lg px-4 py-2 text-sm font-medium ${
-                selectedSubcategory === 'Servicios Públicos' ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                selectedSubcategories.includes('Servicios Públicos') ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
               }`}
             >
               Servicios Públicos
@@ -92,7 +95,7 @@ const VerticalNav: React.FC<VerticalNavProps> = ({ onFilterChange }) => {
             <button
               onClick={() => handleSubcategoryClick('Vivienda')}
               className={`block rounded-lg px-4 py-2 text-sm font-medium ${
-                selectedSubcategory === 'Vivienda' ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                selectedSubcategories.includes('Vivienda') ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
               }`}
             >
               Vivienda
@@ -102,7 +105,7 @@ const VerticalNav: React.FC<VerticalNavProps> = ({ onFilterChange }) => {
             <button
               onClick={() => handleSubcategoryClick('Urbanismo')}
               className={`block rounded-lg px-4 py-2 text-sm font-medium ${
-                selectedSubcategory === 'Urbanismo' ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                selectedSubcategories.includes('Urbanismo') ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
               }`}
             >
               Urbanismo
@@ -112,7 +115,7 @@ const VerticalNav: React.FC<VerticalNavProps> = ({ onFilterChange }) => {
             <button
               onClick={() => handleSubcategoryClick('Movilidad')}
               className={`block rounded-lg px-4 py-2 text-sm font-medium ${
-                selectedSubcategory === 'Movilidad' ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                selectedSubcategories.includes('Movilidad') ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
               }`}
             >
               Movilidad
@@ -122,7 +125,7 @@ const VerticalNav: React.FC<VerticalNavProps> = ({ onFilterChange }) => {
             <button
               onClick={() => handleSubcategoryClick('Cultura')}
               className={`block rounded-lg px-4 py-2 text-sm font-medium ${
-                selectedSubcategory === 'Cultura' ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                selectedSubcategories.includes('Cultura') ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
               }`}
             >
               Cultura
@@ -132,7 +135,7 @@ const VerticalNav: React.FC<VerticalNavProps> = ({ onFilterChange }) => {
             <button
               onClick={() => handleSubcategoryClick('Economia y empleo')}
               className={`block rounded-lg px-4 py-2 text-sm font-medium ${
-                selectedSubcategory === 'Economia y empleo' ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                selectedSubcategories.includes('Economia y empleo') ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
               }`}
             >
               Economía y empleo
@@ -142,7 +145,7 @@ const VerticalNav: React.FC<VerticalNavProps> = ({ onFilterChange }) => {
             <button
               onClick={() => handleSubcategoryClick('Deporte')}
               className={`block rounded-lg px-4 py-2 text-sm font-medium ${
-                selectedSubcategory === 'Deporte' ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                selectedSubcategories.includes('Deporte') ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
               }`}
             >
               Deporte
@@ -152,7 +155,7 @@ const VerticalNav: React.FC<VerticalNavProps> = ({ onFilterChange }) => {
             <button
               onClick={() => handleSubcategoryClick('Memoria democrática')}
               className={`block rounded-lg px-4 py-2 text-sm font-medium ${
-                selectedSubcategory === 'Memoria democrática' ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+                selectedSubcategories.includes('Memoria democrática') ? 'bg-gray-200 text-gray-700' : 'text-gray-500 hover:bg-gray-100 hover:text-gray-700'
               }`}
             >
               Memoria democrática
