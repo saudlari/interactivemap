@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 interface MarkerFormProps {
   position: [number, number] | null;
-  onSubmit: (data: { title: string; description: string; tag: string; imageFile: File | null; category: string; subcategory: string; }) => void;
+  onSubmit: (data: { title: string; description: string; tag: string; imageFile: File | null; category: string; subcategory: string; link: string; }) => void; // Asegúrate de que 'link' esté aquí
   onCancel: () => void;
 }
 
@@ -12,6 +12,7 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
     description: '',
     tag: '',
     imageFile: null as File | null,
+    link: '', // Add link to formData
     category: 'Conflictos',
     subcategory: 'Medio Ambiente',
     coordinates: position, // Add coordinates to formData
@@ -35,12 +36,13 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData); // Enviar los datos incluyendo las coordenadas
+    onSubmit(formData); // Envia los datos incluyendo las coordenadas
     setFormData({ 
       title: '', 
       description: '', 
       tag: '', 
       imageFile: null, 
+      link: '', // Reset link
       category: 'Conflictos', 
       subcategory: 'Medio Ambiente',
       coordinates: position, // Reset coordinates
@@ -129,6 +131,17 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
             type="file"
             id="file"
             onChange={handleFileChange}
+            className="marker-form-input"
+          />
+        </div>
+        <div className="marker-form-group">
+          <label htmlFor="link" className="marker-form-label">Enlace:</label>
+          <input
+            type="url"
+            id="link"
+            name="link"
+            value={formData.link}
+            onChange={handleInputChange}
             className="marker-form-input"
           />
         </div>

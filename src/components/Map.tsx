@@ -9,7 +9,9 @@ import L from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
-import MarkerForm from './Markerform';  // Importamos el componente de formulario
+import MarkerForm from './Markerform'; 
+
+import 'font-awesome/css/font-awesome.min.css';
 
 const DefaultIcon = L.icon({
   iconUrl: icon.src,
@@ -31,23 +33,24 @@ const MapClickHandler = ({ onClick }: { onClick: (pos: [number, number]) => void
 const Map = () => {
   const [isClient, setIsClient] = useState(false);
   const [formPosition, setFormPosition] = useState<[number, number] | null>(null);
-  const [markers, setMarkers] = useState<{ position: [number, number]; title: string; description: string; tag: string; category: string; subcategory: string; imageFile?: File | null }[]>([]);
+  const [markers, setMarkers] = useState<{ position: [number, number]; title: string; description: string; tag: string; category: string; subcategory: string; imageFile?: File | null; link?: string; }[]>([]);
 
   useEffect(() => {
     setIsClient(true);
   }, []);
 
   const handleMapClick = (position: [number, number]) => {
-    setFormPosition(position); // Mostrar el formulario en la posición clicada
+    setFormPosition(position); // Mostra el formulario en la posición clicada
   };
 
-  const handleFormSubmit = (data: { title: string; description: string; tag: string; category: string; subcategory: string; imageFile: File | null }) => {
+  const handleFormSubmit = (data: { title: string; description: string; tag: string; category: string; subcategory: string; imageFile: File | null; link: string; }) => {
     if (formPosition) {
       // Agregar el nuevo marcador
-      setMarkers([...markers, { position: formPosition, title: data.title, description: data.description, tag: data.tag, category: data.category, subcategory: data.subcategory, imageFile: data.imageFile }]);
-      setFormPosition(null); // Cerrar el formulario
+      setMarkers([...markers, { position: formPosition, title: data.title, description: data.description, tag: data.tag, category: data.category, subcategory: data.subcategory, imageFile: data.imageFile, link: data.link }]);
+      setFormPosition(null); // Cierra el formulario
     }
   };
+
 
   const handleFormCancel = () => {
     setFormPosition(null); // Cerrar el formulario sin hacer nada
@@ -83,11 +86,32 @@ const Map = () => {
                 <p className="text-sm text-gray-500">{marker.category} - {marker.subcategory}</p>
                 {/* Mostrar imagen si fue subida */}
                 {marker.imageFile && (
-                  <img
-                    src={URL.createObjectURL(marker.imageFile)}
-                    alt={marker.title}
-                    className="w-full max-h-40 mt-2 rounded-lg shadow-md object-cover"
-                  />
+                  <>
+                    {marker.imageFile.type.startsWith('image/') ? (
+                      <img
+                        src={URL.createObjectURL(marker.imageFile)}
+                        alt={marker.title}
+                        className="w-full max-h-40 mt-2 rounded-lg shadow-md object-cover"
+                      />
+                    ) : (
+                      <p className="text-sm text-blue-500 mt-2 flex items-center justify-center">
+                        <i className="fa fa-download mr-2"></i> {/* Ícono de descarga */}
+                        <a
+                          href={URL.createObjectURL(marker.imageFile)}
+                          download={marker.imageFile.name}
+                          className="underline"
+                        >
+                          Descargar archivo
+                        </a>
+                      </p>
+                    )}
+                  </>
+                )}
+                {/* Mostrar enlace si existe */}
+                {marker.link && (
+                  <p className="text-sm text-blue-500">
+                    <a href={marker.link} target="_blank" rel="noopener noreferrer">{marker.link}</a>
+                  </p>
                 )}
               </div>
             </Popup>
