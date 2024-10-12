@@ -168,3 +168,11 @@ textarea {
 textarea.marker-form-input {
   resize: vertical;
 }
+
+.custom-select {
+  border: none; /* Elimina el borde */
+}
+
+.custom-select:focus {
+  outline: none; /* Elimina el contorno al hacer clic */
+}
