@@ -66,7 +66,7 @@ const Map = () => {
         tag: data.tag, 
         category: data.category, 
         subcategory: data.subcategory, 
-        imageFiles: data.imageFiles, 
+        imageFiles: data.imageFiles, // Asegúrate de que esto esté correcto
         link: data.link 
       }]);
       setFormPosition(null); // Cierra el formulario
@@ -161,8 +161,8 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({ imageFiles }) => {
       <Image
         src={URL.createObjectURL(imageFiles[currentIndex])}
         alt={`Image ${currentIndex}`}
-        layout="fill" // Asegúrate de que la imagen cubra el contenedor
-        objectFit="cover" // Asegura que la imagen no se distorsione
+        layout="fill"
+        objectFit="cover"
         className="rounded-lg"
       />
       
