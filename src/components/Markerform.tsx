@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 interface MarkerFormProps {
   position: [number, number] | null;
-  onSubmit: (data: { title: string; description: string; tag: string; imageFile: File | null; category: string; subcategory: string; link: string; }) => void;
+  onSubmit: (data: { title: string; description: string; tag: string; imageFiles: File[]; category: string; subcategory: string; link: string; }) => void;
   onCancel: () => void;
 }
 
@@ -11,7 +11,7 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
     title: '',
     description: '',
     tag: '',
-    imageFile: null as File | null,
+    imageFiles: [] as File[], // Cambiado para manejar múltiples archivos
     link: '',
     category: 'Conflictos',
     subcategory: 'Medio Ambiente',
@@ -29,7 +29,7 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setFormData({ ...formData, imageFile: e.target.files[0] });
+      setFormData({ ...formData, imageFiles: Array.from(e.target.files) });
     }
   };
 
@@ -40,7 +40,7 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
       title: '',
       description: '',
       tag: '',
-      imageFile: null,
+      imageFiles: [], // Limpiar el array de archivos
       link: '',
       category: 'Conflictos',
       subcategory: 'Medio Ambiente',
@@ -134,14 +134,14 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
           />
         </div>
 
-        {/* Subir imagen */}
+        {/* Subir imágenes */}
         <div className="marker-form-group">
-          <label htmlFor="file" className="marker-form-label text-[#004f59]">Subir Imagen o Archivo:</label>
-          
+          <label htmlFor="file" className="marker-form-label text-[#004f59]">Subir Imágenes o Archivos:</label>
           <div className="relative">
             <input
               type="file"
               id="file"
+              multiple // Permitir múltiples archivos
               onChange={handleFileChange}
               className="absolute inset-0 opacity-0 cursor-pointer"
             />
@@ -150,7 +150,7 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
               className="marker-form-button bg-[#f0f4f8] text-[#004f59] border border-gray-300 rounded-lg px-4 py-2 w-full"
               onClick={() => document.getElementById('file')?.click()}
             >
-              {formData.imageFile ? formData.imageFile.name : 'Seleccionar archivo'}
+              {formData.imageFiles.length > 0 ? `${formData.imageFiles.length} archivos seleccionados` : 'Seleccionar archivos'}
             </button>
           </div>
         </div>
