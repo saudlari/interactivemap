@@ -6,7 +6,9 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
 import 'font-awesome/css/font-awesome.min.css';
+
 import MarkerForm from './Markerform';
+import Image from 'next/image'; // Asegúrate de importar el componente Image
 
 const DefaultIcon = L.icon({
   iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
@@ -155,18 +157,18 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({ imageFiles }) => {
   };
 
   return (
-    <div className="relative w-full max-h-40 mt-2 rounded-lg shadow-md overflow-hidden">
-      <div className="flex items-center justify-center">
-        <img
-          src={URL.createObjectURL(imageFiles[currentIndex])}
-          alt={`Image ${currentIndex}`}
-          className="w-auto max-h-40 object-contain rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
-        />
-      </div>
+    <div className="relative w-full max-h-40 mt-2 rounded-lg shadow-md">
+      <Image
+        src={URL.createObjectURL(imageFiles[currentIndex])}
+        alt={`Image ${currentIndex}`}
+        layout="fill" // Asegúrate de que la imagen cubra el contenedor
+        objectFit="cover" // Asegura que la imagen no se distorsione
+        className="rounded-lg"
+      />
       
       {/* Botón anterior */}
       <button
-        className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-black bg-opacity-50 text-white px-2 py-1 rounded-r-lg focus:outline-none hover:bg-opacity-75"
+        className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-black bg-opacity-50 text-white px-2 py-1 rounded-r-lg"
         onClick={handlePrev}
       >
         ◀
@@ -174,7 +176,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({ imageFiles }) => {
 
       {/* Botón siguiente */}
       <button
-        className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-black bg-opacity-50 text-white px-2 py-1 rounded-l-lg focus:outline-none hover:bg-opacity-75"
+        className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-black bg-opacity-50 text-white px-2 py-1 rounded-l-lg"
         onClick={handleNext}
       >
         ▶
@@ -185,7 +187,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({ imageFiles }) => {
         {imageFiles.map((_, index) => (
           <div
             key={index}
-            className={`w-2 h-2 rounded-full ${index === currentIndex ? 'bg-white' : 'bg-gray-400'} transition-all duration-300`}
+            className={`w-2 h-2 rounded-full ${index === currentIndex ? 'bg-white' : 'bg-gray-400'}`}
           />
         ))}
       </div>

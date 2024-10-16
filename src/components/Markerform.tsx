@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Image from 'next/image'; // Asegúrate de importar el componente Image
 
 interface MarkerFormProps {
   position: [number, number] | null;
@@ -153,6 +154,21 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
               {formData.imageFiles.length > 0 ? `${formData.imageFiles.length} archivos seleccionados` : 'Seleccionar archivos'}
             </button>
           </div>
+        </div>
+
+        {/* Mostrar imágenes seleccionadas */}
+        <div className="flex flex-wrap">
+          {formData.imageFiles.map((file, index) => (
+            <div key={index} className="relative w-24 h-24 m-2">
+              <Image
+                src={URL.createObjectURL(file)}
+                alt={`Selected Image ${index}`}
+                layout="fill"
+                objectFit="cover"
+                className="rounded-lg"
+              />
+            </div>
+          ))}
         </div>
 
         {/* Enlace */}
