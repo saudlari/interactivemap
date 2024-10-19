@@ -176,3 +176,7 @@ textarea.marker-form-input {
 .custom-select:focus {
   outline: none; /* Elimina el contorno al hacer clic */
 }
+.image-gallery-icon {
+  width: 20px; /* Ajusta el tamaño según sea necesario */
+  height: 20px; /* Ajusta el tamaño según sea necesario */
+}

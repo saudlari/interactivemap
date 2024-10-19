@@ -1,12 +1,9 @@
-'use client'
-
 import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
-
-import 'font-awesome/css/font-awesome.min.css';
 import MarkerForm from './Markerform';
+import VideoPreview from './VideoPreview'; // Importa el componente de vista previa de video
 
 const DefaultIcon = L.icon({
   iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
@@ -16,8 +13,8 @@ const DefaultIcon = L.icon({
 L.Marker.prototype.options.icon = DefaultIcon;
 
 const MapClickHandler = ({ onClick }: { onClick: (pos: [number, number]) => void }) => {
-  useMapEvents({
-    click(e) {
+  const map = useMapEvents({
+    click(e: L.LeafletMouseEvent) {
       onClick([e.latlng.lat, e.latlng.lng]);
     },
   });
@@ -37,6 +34,7 @@ const Map = () => {
     subcategory: string; 
     imageFiles?: File[]; 
     link?: string; 
+    videoLink?: string; // Nuevo campo para el video
   }[]>([]);
 
   useEffect(() => {
@@ -44,7 +42,7 @@ const Map = () => {
   }, []);
 
   const handleMapClick = (position: [number, number]) => {
-    setFormPosition(position); // Muestra el formulario en la posición clicada
+    setFormPosition(position);
   };
 
   const handleFormSubmit = (data: { 
@@ -55,6 +53,7 @@ const Map = () => {
     subcategory: string; 
     imageFiles: File[]; 
     link: string; 
+    videoLink: string; // Recibe también el enlace de video
   }) => {
     if (formPosition) {
       setMarkers([...markers, { 
@@ -65,14 +64,15 @@ const Map = () => {
         category: data.category, 
         subcategory: data.subcategory, 
         imageFiles: data.imageFiles, 
-        link: data.link 
+        link: data.link,
+        videoLink: data.videoLink, // Guardar el video en el estado de marcadores
       }]);
-      setFormPosition(null); // Cierra el formulario
+      setFormPosition(null);
     }
   };
 
   const handleFormCancel = () => {
-    setFormPosition(null); // Cierra el formulario sin hacer nada
+    setFormPosition(null);
   };
 
   if (!isClient) {
@@ -91,10 +91,8 @@ const Map = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
         
-        {/* Manejador de clic en el mapa */}
         <MapClickHandler onClick={handleMapClick} />
 
-        {/* Mostrar los marcadores existentes */}
         {markers.map((marker, idx) => (
           <Marker key={idx} position={marker.position}>
             <Popup>
@@ -104,16 +102,32 @@ const Map = () => {
                 <small className="text-xs text-gray-400 italic">{marker.tag}</small>
                 <p className="text-sm text-gray-500">{marker.category} - {marker.subcategory}</p>
                 
-                {/* Mostrar las imágenes en un carrusel */}
-                {marker.imageFiles && marker.imageFiles.length > 0 && (
-                  <ImageCarousel imageFiles={marker.imageFiles} />
-                )}
-                
-                {/* Mostrar enlace si existe */}
+                {/* Mostrar el enlace de la noticia si existe */}
                 {marker.link && (
                   <p className="text-sm text-blue-500">
                     <a href={marker.link} target="_blank" rel="noopener noreferrer">{marker.link}</a>
                   </p>
+                )}
+
+                {/* Mostrar la vista previa del video si hay un enlace de video */}
+                {marker.videoLink && (
+                  <div className="video-preview mt-2">
+                    <VideoPreview link={marker.videoLink} style={{ width: '100%', height: 'auto' }} />
+                  </div>
+                )}
+
+                {/* Mostrar la galería de imágenes si existen */}
+                {marker.imageFiles && marker.imageFiles.length > 0 && (
+                  <div className="image-gallery mt-2 grid grid-cols-2 gap-2">
+                    {marker.imageFiles.map((file, index) => (
+                      <img 
+                        key={index} 
+                        src={URL.createObjectURL(file)} 
+                        alt={`Uploaded ${index}`} 
+                        className="w-full h-auto rounded-lg" 
+                      />
+                    ))}
+                  </div>
                 )}
               </div>
             </Popup>
@@ -121,7 +135,6 @@ const Map = () => {
         ))}
       </MapContainer>
 
-      {/* Mostrar el formulario cuando formPosition no es null */}
       {formPosition && (
         <MarkerForm
           position={formPosition}
@@ -134,61 +147,3 @@ const Map = () => {
 };
 
 export default Map;
-
-interface ImageCarouselProps {
-  imageFiles: File[];
-}
-
-const ImageCarousel: React.FC<ImageCarouselProps> = ({ imageFiles }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const handlePrev = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? imageFiles.length - 1 : prevIndex - 1
-    );
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === imageFiles.length - 1 ? 0 : prevIndex + 1
-    );
-  };
-
-  return (
-    <div className="relative w-full max-h-40 mt-2 rounded-lg shadow-md overflow-hidden">
-      <div className="flex items-center justify-center">
-        <img
-          src={URL.createObjectURL(imageFiles[currentIndex])}
-          alt={`Image ${currentIndex}`}
-          className="w-auto max-h-40 object-contain rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
-        />
-      </div>
-      
-      {/* Botón anterior */}
-      <button
-        className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-black bg-opacity-50 text-white px-2 py-1 rounded-r-lg focus:outline-none hover:bg-opacity-75"
-        onClick={handlePrev}
-      >
-        ◀
-      </button>
-
-      {/* Botón siguiente */}
-      <button
-        className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-black bg-opacity-50 text-white px-2 py-1 rounded-l-lg focus:outline-none hover:bg-opacity-75"
-        onClick={handleNext}
-      >
-        ▶
-      </button>
-
-      {/* Indicadores */}
-      <div className="absolute bottom-0 left-0 right-0 flex justify-center space-x-2 pb-2">
-        {imageFiles.map((_, index) => (
-          <div
-            key={index}
-            className={`w-2 h-2 rounded-full ${index === currentIndex ? 'bg-white' : 'bg-gray-400'} transition-all duration-300`}
-          />
-        ))}
-      </div>
-    </div>
-  );
-};
