@@ -1,47 +1,59 @@
-import React, { useState } from 'react';
-import Image from 'next/image'; // Asegúrate de importar el componente Image
+import React, { useState, useEffect } from 'react';
+import ImageUploader from './ImageUploader';
 
 interface MarkerFormProps {
   position: [number, number] | null;
-  onSubmit: (data: { title: string; description: string; tag: string; imageFiles: File[]; category: string; subcategory: string; link: string; }) => void;
+  onSubmit: (data: MarkerFormData) => void;
   onCancel: () => void;
 }
 
+// Definir una interfaz para el estado formData
+interface MarkerFormData {
+  title: string;
+  description: string;
+  tag: string;
+  imageFiles: string[]; // Asegura que TypeScript reconozca `imageFiles` como un array de strings
+  link: string;
+  category: string;
+  subcategory: string;
+  coordinates: [number, number] | null;
+}
+
 const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel }) => {
-  const [formData, setFormData] = useState({
+  // Inicializar formData con el tipo definido en MarkerFormData
+  const [formData, setFormData] = useState<MarkerFormData>({
     title: '',
     description: '',
     tag: '',
-    imageFiles: [] as File[], // Cambiado para manejar múltiples archivos
+    imageFiles: [], // Inicializar imageFiles como un array vacío
     link: '',
     category: 'Conflictos',
     subcategory: 'Medio Ambiente',
     coordinates: position,
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     setFormData((prevData) => ({ ...prevData, coordinates: position }));
   }, [position]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      setFormData({ ...formData, imageFiles: Array.from(e.target.files) });
-    }
+  // Esta función recibe las imágenes en base64 desde ImageUploader y actualiza `imageFiles`
+  const handleImageChange = (base64Images: string[]) => {
+    setFormData((prevData) => ({ ...prevData, imageFiles: base64Images }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    onSubmit(formData);  // Enviar `formData` con `imageFiles` incluido a `Map`
     setFormData({
       title: '',
       description: '',
       tag: '',
-      imageFiles: [], // Limpiar el array de archivos
+      imageFiles: [],
       link: '',
       category: 'Conflictos',
       subcategory: 'Medio Ambiente',
@@ -49,13 +61,11 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
     });
   };
 
-  if (!position) return null;
-
   return (
     <div className="marker-form-container bg-gradient-to-b from-gray-100 to-gray-300 text-gray-900 p-6 rounded-lg shadow-lg">
       <h3 className="marker-form-title text-2xl font-bold mb-4 text-[#004f59]">Agregar Marcador</h3>
       <form onSubmit={handleSubmit} className="marker-form space-y-4">
-        {/* Categoría */}
+        {/* Campo para la categoría */}
         <div className="marker-form-group">
           <label htmlFor="category" className="marker-form-label text-[#004f59]">Categoría:</label>
           <select
@@ -71,7 +81,7 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
           </select>
         </div>
 
-        {/* Subcategoría */}
+        {/* Campo para la subcategoría */}
         <div className="marker-form-group">
           <label htmlFor="subcategory" className="marker-form-label text-[#004f59]">Subcategoría:</label>
           <select
@@ -88,13 +98,13 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
             <option value="Urbanismo">Urbanismo</option>
             <option value="Movilidad">Movilidad</option>
             <option value="Cultura">Cultura</option>
-            <option value="Economia y empleo">Economía y empleo</option>
+            <option value="Economía y empleo">Economía y empleo</option>
             <option value="Deporte">Deporte</option>
             <option value="Memoria democrática">Memoria democrática</option>
           </select>
         </div>
 
-        {/* Título */}
+        {/* Campo para el título */}
         <div className="marker-form-group">
           <label htmlFor="title" className="marker-form-label text-[#004f59]">Título:</label>
           <input
@@ -108,7 +118,7 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
           />
         </div>
 
-        {/* Descripción */}
+        {/* Campo para la descripción */}
         <div className="marker-form-group">
           <label htmlFor="description" className="marker-form-label text-[#004f59]">Descripción:</label>
           <textarea
@@ -121,7 +131,7 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
           />
         </div>
 
-        {/* Tag */}
+        {/* Campo para el tag */}
         <div className="marker-form-group">
           <label htmlFor="tag" className="marker-form-label text-[#004f59]">Tag:</label>
           <input
@@ -135,43 +145,10 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
           />
         </div>
 
-        {/* Subir imágenes */}
-        <div className="marker-form-group">
-          <label htmlFor="file" className="marker-form-label text-[#004f59]">Subir Imágenes o Archivos:</label>
-          <div className="relative">
-            <input
-              type="file"
-              id="file"
-              multiple // Permitir múltiples archivos
-              onChange={handleFileChange}
-              className="absolute inset-0 opacity-0 cursor-pointer"
-            />
-            <button
-              type="button"
-              className="marker-form-button bg-[#f0f4f8] text-[#004f59] border border-gray-300 rounded-lg px-4 py-2 w-full"
-              onClick={() => document.getElementById('file')?.click()}
-            >
-              {formData.imageFiles.length > 0 ? `${formData.imageFiles.length} archivos seleccionados` : 'Seleccionar archivos'}
-            </button>
-          </div>
-        </div>
+        {/* Cargador de imágenes */}
+        <ImageUploader onChange={handleImageChange} />
 
-        {/* Mostrar imágenes seleccionadas */}
-        <div className="flex flex-wrap">
-          {formData.imageFiles.map((file, index) => (
-            <div key={index} className="relative w-24 h-24 m-2">
-              <Image
-                src={URL.createObjectURL(file)}
-                alt={`Selected Image ${index}`}
-                layout="fill"
-                objectFit="cover"
-                className="rounded-lg"
-              />
-            </div>
-          ))}
-        </div>
-
-        {/* Enlace */}
+        {/* Campo para el enlace */}
         <div className="marker-form-group">
           <label htmlFor="link" className="marker-form-label text-[#004f59]">Enlace:</label>
           <input
@@ -184,7 +161,7 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
           />
         </div>
 
-        {/* Acciones */}
+        {/* Botones de acción */}
         <div className="marker-form-actions flex justify-end space-x-4">
           <button
             type="button"
