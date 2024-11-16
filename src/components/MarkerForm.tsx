@@ -46,19 +46,34 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
     setFormData((prevData) => ({ ...prevData, imageFiles: base64Images }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);  // Enviar `formData` con `imageFiles` incluido a `Map`
-    setFormData({
-      title: '',
-      description: '',
-      tag: '',
-      imageFiles: [],
-      link: '',
-      category: 'Conflictos',
-      subcategory: 'Medio Ambiente',
-      coordinates: position,
-    });
+    try {
+      const response = await fetch('/api/markers', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      if (response.ok) {
+        onSubmit(formData);
+        setFormData({
+          title: '',
+          description: '',
+          tag: '',
+          imageFiles: [],
+          link: '',
+          category: 'Conflictos',
+          subcategory: 'Medio Ambiente',
+          coordinates: position,
+        });
+      } else {
+        console.error('Error saving marker');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
   return (

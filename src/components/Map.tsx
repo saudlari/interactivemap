@@ -32,7 +32,7 @@ interface MarkerData {
   link: string;
 }
 
-const Map = () => {
+const Map: React.FC<{ selectedCategory: string; selectedSubcategory: string }> = ({ selectedCategory, selectedSubcategory }) => {
   const [isClient, setIsClient] = useState(false);
   const [formPosition, setFormPosition] = useState<[number, number] | null>(null);
   const [markers, setMarkers] = useState<MarkerData[]>([]);
@@ -56,6 +56,13 @@ const Map = () => {
     setFormPosition(null);
   };
 
+  // Filtrar marcadores según la categoría y subcategoría seleccionadas
+  const filteredMarkers = markers.filter(marker => {
+    const categoryMatch = selectedCategory ? marker.category === selectedCategory : true;
+    const subcategoryMatch = selectedSubcategory ? marker.subcategory === selectedSubcategory : true;
+    return categoryMatch && subcategoryMatch;
+  });
+
   if (!isClient) return null;
 
   return (
@@ -70,7 +77,7 @@ const Map = () => {
         <MapClickHandler onClick={handleMapClick} />
 
         {/* Mostrar los marcadores existentes */}
-        {markers.map((marker, idx) => (
+        {filteredMarkers.map((marker, idx) => (
   <Marker key={idx} position={marker.position}>
     <Popup minWidth={250} maxWidth={400}>
       <div className="popup-content">
