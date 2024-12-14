@@ -39,8 +39,23 @@ const Map: React.FC<{ selectedCategory: string; selectedSubcategory: string }> =
 
   useEffect(() => {
     setIsClient(true);
-  }, []);
+    // Cargar marcadores desde la base de datos al iniciar
+    const fetchMarkers = async () => {
+      try {
+        const response = await fetch('/api/markers');
+        if (!response.ok) {
+          throw new Error('Error al cargar los marcadores');
+        }
+        const data = await response.json();
+        setMarkers(data); // Establecer los marcadores en el estado
+      } catch (error) {
+        console.error('Error al obtener los marcadores:', error);
+      }
+    };
 
+    fetchMarkers();
+  }, []);
+  
   const handleMapClick = (position: [number, number]) => {
     setFormPosition(position);
   };
@@ -56,15 +71,7 @@ const Map: React.FC<{ selectedCategory: string; selectedSubcategory: string }> =
     setFormPosition(null);
   };
 
-  // Filtrar marcadores según la categoría y subcategoría seleccionadas
-  const filteredMarkers = markers.filter(marker => {
-    const categoryMatch = selectedCategory ? marker.category === selectedCategory : true;
-    const subcategoryMatch = selectedSubcategory ? marker.subcategory === selectedSubcategory : true;
-    return categoryMatch && subcategoryMatch;
-  });
-
   if (!isClient) return null;
-
   return (
     <div className="relative h-screen w-full">
       <MapContainer center={[36.7213, -4.4214]} zoom={13} className="w-full h-full rounded-lg shadow-lg">
@@ -73,32 +80,28 @@ const Map: React.FC<{ selectedCategory: string; selectedSubcategory: string }> =
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         />
         
-        {/* Manejador de clic en el mapa */}
         <MapClickHandler onClick={handleMapClick} />
-
-        {/* Mostrar los marcadores existentes */}
-        {filteredMarkers.map((marker, idx) => (
-  <Marker key={idx} position={marker.position}>
-    <Popup minWidth={250} maxWidth={400}>
-      <div className="popup-content">
-        <h3 className="text-lg font-semibold mb-2">{marker.title}</h3>
-        <p className="text-sm mb-3">{marker.description}</p>
-        <small className="text-xs text-gray-400 italic">{marker.tag}</small>
-        <p className="text-sm text-gray-500">{marker.category} - {marker.subcategory}</p>
         
-        {/* Carrusel de imágenes */}
-        {marker.imageFiles && marker.imageFiles.length > 0 ? (
-          <ImageCarousel imageFiles={marker.imageFiles} />
-        ) : (
-          <p className="text-xs text-gray-400 italic">No hay imágenes disponibles</p>
-        )}
-      </div>
-    </Popup>
-  </Marker>
-))}
+        {markers.map((marker, idx) => (
+          <Marker key={idx} position={marker.position}>
+            <Popup minWidth={250} maxWidth={400}>
+              <div className="popup-content">
+                <h3 className="text-lg font-semibold mb-2">{marker.title}</h3>
+                <p className="text-sm mb-3">{marker.description}</p>
+                <small className="text-xs text-gray-400 italic">{marker.tag}</small>
+                <p className="text-sm text-gray-500">{marker.category} - {marker.subcategory}</p>
+                
+                {marker.imageFiles && marker.imageFiles.length > 0 ? (
+                  <ImageCarousel imageFiles={marker.imageFiles} />
+                ) : (
+                  <p className="text-xs text-gray-400 italic">No hay imágenes disponibles</p>
+                )}
+              </div>
+            </Popup>
+          </Marker>
+        ))}
       </MapContainer>
 
-      {/* Mostrar el formulario cuando formPosition no es null */}
       {formPosition && (
         <MarkerForm
           position={formPosition}

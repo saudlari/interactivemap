@@ -56,29 +56,36 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
         },
         body: JSON.stringify(formData),
       });
-      if (response.ok) {
-        onSubmit(formData);
-        setFormData({
-          title: '',
-          description: '',
-          tag: '',
-          imageFiles: [],
-          link: '',
-          category: 'Conflictos',
-          subcategory: 'Medio Ambiente',
-          coordinates: position,
-        });
-      } else {
-        console.error('Error saving marker');
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('Error al guardar el marcador:', errorData);
+        alert(`Error: ${errorData.error || 'Error desconocido'}`);
+        return; // Salir de la función si hay un error
       }
+
+      const data = await response.json();
+      onSubmit(data);
+      // Resetear el formulario
+      setFormData({
+        title: '',
+        description: '',
+        tag: '',
+        imageFiles: [],
+        link: '',
+        category: 'Conflictos',
+        subcategory: 'Medio Ambiente',
+        coordinates: position,
+      });
     } catch (error) {
       console.error('Error:', error);
+      alert('Error al guardar el marcador. Por favor, intenta de nuevo.');
     }
   };
 
   return (
-    <div className="marker-form-container bg-gradient-to-b from-gray-100 to-gray-300 text-gray-900 p-6 rounded-lg shadow-lg">
-      <h3 className="marker-form-title text-2xl font-bold mb-4 text-[#004f59]">Agregar Marcador</h3>
+    <div className="marker-form-container">
+      <h3 className="marker-form-title">Agregar Marcador</h3>
       <form onSubmit={handleSubmit} className="marker-form space-y-4">
         {/* Campo para la categoría */}
         <div className="marker-form-group">

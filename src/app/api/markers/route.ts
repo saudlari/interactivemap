@@ -8,6 +8,15 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     console.log('Request body:', body); // Log del cuerpo de la solicitud
+
+    // Validar campos requeridos
+    if (!body.title || !body.coordinates) {
+      return NextResponse.json(
+        { error: 'Faltan campos requeridos: title y coordinates' },
+        { status: 400 }
+      );
+    }
+
     const marker = await Marker.create(body); // Crear el nuevo marcador en MongoDB
     console.log('Marker created:', marker); // Log del marcador creado
     return NextResponse.json(marker, { status: 201 });
