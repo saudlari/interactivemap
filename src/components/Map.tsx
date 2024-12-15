@@ -43,7 +43,7 @@ const Map: React.FC<{ selectedCategory: string; selectedSubcategory: string }> =
     // Cargar marcadores desde la base de datos al iniciar
     const fetchMarkers = async () => {
       try {
-      const response = await fetch('/api/marker');
+        const response = await fetch('/api/marker');
         if (!response.ok) {
           throw new Error('Error al cargar los marcadores');
         }
@@ -56,7 +56,12 @@ const Map: React.FC<{ selectedCategory: string; selectedSubcategory: string }> =
 
     fetchMarkers();
   }, []);
-  
+
+  const filteredMarkers = markers.filter(marker =>
+    (selectedCategory ? marker.category === selectedCategory : true) &&
+    (selectedSubcategory ? marker.subcategory === selectedSubcategory : true)
+  );
+
   const handleMapClick = (coordinates: [number, number]) => {
     setFormPosition(coordinates);
   };
@@ -83,7 +88,7 @@ const Map: React.FC<{ selectedCategory: string; selectedSubcategory: string }> =
         
         <MapClickHandler onClick={handleMapClick} />
         
-        {markers.map((marker, idx) => (
+        {filteredMarkers.map((marker, idx) => (
           <MarkerPopup key={idx} marker={marker} />
         ))}
       </MapContainer>

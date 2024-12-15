@@ -13,7 +13,7 @@ const VerticalNav: React.FC<VerticalNavProps> = ({ onFilterChange }) => {
     setSelectedCategories(prev =>
       prev.includes(category) ? prev.filter(c => c !== category) : [...prev, category]
     );
-    onFilterChange(category, "");
+    onFilterChange(category, selectedSubcategories.join(','));
   };
 
   const handleSubcategoryClick = (subcategory: string) => {
