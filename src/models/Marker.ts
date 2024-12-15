@@ -14,6 +14,6 @@ const MarkerSchema = new mongoose.Schema({
   },
 });
 
-const Marker = mongoose.model('Marker', MarkerSchema);
+const Marker = mongoose.models.Marker || mongoose.model('Marker', MarkerSchema);
 
 export default Marker;

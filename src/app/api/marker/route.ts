@@ -28,3 +28,9 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export async function GET() {
+  await connectDB(); // Conectar a MongoDB
+  const markers = await Marker.find({}, 'title category subcategory coordinates').exec()
+  return NextResponse.json(markers)
+}

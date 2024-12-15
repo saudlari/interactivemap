@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import MarkerForm from './MarkerForm';
-import ImageCarousel from './ImageCarousel'; // Importa el componente del carrusel
+import MarkerPopup from './Popup';
 
 const DefaultIcon = L.icon({
   iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
@@ -22,6 +22,7 @@ const MapClickHandler = ({ onClick }: { onClick: (pos: [number, number]) => void
 };
 
 interface MarkerData {
+  _id: string;
   position: [number, number];
   title: string;
   description: string;
@@ -42,11 +43,12 @@ const Map: React.FC<{ selectedCategory: string; selectedSubcategory: string }> =
     // Cargar marcadores desde la base de datos al iniciar
     const fetchMarkers = async () => {
       try {
-        const response = await fetch('/api/markers');
+      const response = await fetch('/api/marker');
         if (!response.ok) {
           throw new Error('Error al cargar los marcadores');
         }
-        const data = await response.json();
+        // TODO: position and coordinate should be the same
+        const data = (await response.json()  ).map((marker: any) => ({...marker, position: marker.coordinates}));
         setMarkers(data); // Establecer los marcadores en el estado
       } catch (error) {
         console.error('Error al obtener los marcadores:', error);
@@ -83,22 +85,7 @@ const Map: React.FC<{ selectedCategory: string; selectedSubcategory: string }> =
         <MapClickHandler onClick={handleMapClick} />
         
         {markers.map((marker, idx) => (
-          <Marker key={idx} position={marker.position}>
-            <Popup minWidth={250} maxWidth={400}>
-              <div className="popup-content">
-                <h3 className="text-lg font-semibold mb-2">{marker.title}</h3>
-                <p className="text-sm mb-3">{marker.description}</p>
-                <small className="text-xs text-gray-400 italic">{marker.tag}</small>
-                <p className="text-sm text-gray-500">{marker.category} - {marker.subcategory}</p>
-                
-                {marker.imageFiles && marker.imageFiles.length > 0 ? (
-                  <ImageCarousel imageFiles={marker.imageFiles} />
-                ) : (
-                  <p className="text-xs text-gray-400 italic">No hay imágenes disponibles</p>
-                )}
-              </div>
-            </Popup>
-          </Marker>
+          <MarkerPopup key={idx} marker={marker} />
         ))}
       </MapContainer>
 
