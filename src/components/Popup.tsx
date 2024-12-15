@@ -6,7 +6,7 @@ type MarkerType = {
     title: string;
     category: string;
     subcategory: string;
-    position: [number, number]
+    coordinates: [number, number]
 }
 export default function MarkerPopup({marker}: {marker: MarkerType}) {
     const [extendedMarker, setExtendedMarker] = useState({})
@@ -32,7 +32,7 @@ export default function MarkerPopup({marker}: {marker: MarkerType}) {
     const tag = extendedMarker.tag;
     const imageFiles: string[] = extendedMarker.imageFiles;
     return(
-        <Marker position={marker.position}>
+        <Marker position={marker.coordinates}>
             <Popup minWidth={250} maxWidth={400}>
                 <div className="popup-content">
                 <h3 className="text-lg font-semibold mb-2">{marker.title}</h3>

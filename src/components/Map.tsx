@@ -23,13 +23,13 @@ const MapClickHandler = ({ onClick }: { onClick: (pos: [number, number]) => void
 
 interface MarkerData {
   _id: string;
-  position: [number, number];
+  coordinates: [number, number];
   title: string;
   description: string;
   tag: string;
   category: string;
   subcategory: string;
-  imageFiles: string[]; // Almacenamos imágenes en base64
+  imageFiles: string[];
   link: string;
 }
 
@@ -47,8 +47,7 @@ const Map: React.FC<{ selectedCategory: string; selectedSubcategory: string }> =
         if (!response.ok) {
           throw new Error('Error al cargar los marcadores');
         }
-        // TODO: position and coordinate should be the same
-        const data = (await response.json()  ).map((marker: any) => ({...marker, position: marker.coordinates}));
+        const data = await response.json();
         setMarkers(data); // Establecer los marcadores en el estado
       } catch (error) {
         console.error('Error al obtener los marcadores:', error);
@@ -58,13 +57,13 @@ const Map: React.FC<{ selectedCategory: string; selectedSubcategory: string }> =
     fetchMarkers();
   }, []);
   
-  const handleMapClick = (position: [number, number]) => {
-    setFormPosition(position);
+  const handleMapClick = (coordinates: [number, number]) => {
+    setFormPosition(coordinates);
   };
 
-  const handleFormSubmit = (data: Omit<MarkerData, 'position'>) => {
+  const handleFormSubmit = (data: Omit<MarkerData, 'coordinates'>) => {
     if (formPosition) {
-      setMarkers([...markers, { ...data, position: formPosition }]);
+      setMarkers([...markers, { ...data, coordinates: formPosition }]);
       setFormPosition(null);
     }
   };
