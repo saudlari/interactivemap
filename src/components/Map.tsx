@@ -23,14 +23,10 @@ const MapClickHandler = ({ onClick }: { onClick: (pos: [number, number]) => void
 
 interface MarkerData {
   _id: string;
-  coordinates: [number, number];
   title: string;
-  description: string;
-  tag: string;
   category: string;
   subcategory: string;
-  imageFiles: string[];
-  link: string;
+  coordinates: [number, number];
 }
 
 const Map: React.FC<{ selectedCategory: string; selectedSubcategory: string }> = ({ selectedCategory, selectedSubcategory }) => {

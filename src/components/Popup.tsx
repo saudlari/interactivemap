@@ -8,45 +8,86 @@ type MarkerType = {
     subcategory: string;
     coordinates: [number, number]
 }
-export default function MarkerPopup({marker}: {marker: MarkerType}) {
-    const [extendedMarker, setExtendedMarker] = useState({})
 
-    useEffect(() => {
-        // Cargar marcadores desde la base de datos al iniciar
-        const fetchMarkers = async () => {
+type ExtendedMarker = {
+    description?: string;
+    tag?: string;
+    imageFiles?: string[];
+    link?: string;
+    title: string;
+    category: string;
+    subcategory: string;
+    coordinates: [number, number];
+};
+
+export default function MarkerPopup({marker}: {marker: MarkerType}) {
+    const [extendedMarker, setExtendedMarker] = useState<ExtendedMarker | null>(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+
+    const fetchMarkerDetails = async () => {
+        console.log('🎯 Intentando cargar detalles del marcador:', marker._id);
+        setIsLoading(true);
+
         try {
-        const response = await fetch('/api/marker/' + marker._id);
+            const url = `/api/marker/${marker._id}`;
+            console.log('📍 Intentando fetch a:', url);
+            
+            const response = await fetch(url);
+            console.log('📥 Response status:', response.status);
+            
             if (!response.ok) {
-            throw new Error('Error al cargar el marcador');
+                throw new Error(`Error ${response.status}: ${response.statusText}`);
             }
-            const data = await response.json()
+            
+            const data = await response.json();
+            console.log('📦 Datos recibidos:', data);
             setExtendedMarker(data);
         } catch (error) {
-            console.error('Error al obtener el marcador:', error);
+            console.error('❌ Error:', error);
+        } finally {
+            setIsLoading(false);
         }
-        };
+    };
 
-        fetchMarkers();
-    }, []);
-    const description = extendedMarker.description;
-    const tag = extendedMarker.tag;
-    const imageFiles: string[] = extendedMarker.imageFiles;
-    return(
-        <Marker position={marker.coordinates}>
-            <Popup minWidth={250} maxWidth={400}>
+    return (
+        <Marker 
+            position={marker.coordinates}
+            eventHandlers={{
+                click: () => {
+                    console.log('🎯 Marcador clickeado');
+                    fetchMarkerDetails();
+                }
+            }}
+        >
+            <Popup 
+                minWidth={250} 
+                maxWidth={400} 
+            >
                 <div className="popup-content">
-                <h3 className="text-lg font-semibold mb-2">{marker.title}</h3>
-                <p className="text-sm mb-3">{description}</p>
-                <small className="text-xs text-gray-400 italic">{tag}</small>
-                <p className="text-sm text-gray-500">{marker.category} - {marker.subcategory}</p>
-                
-                {imageFiles && imageFiles.length > 0 ? (
-                    <ImageCarousel imageFiles={imageFiles} />
-                ) : (
-                    <p className="text-xs text-gray-400 italic">No hay imágenes disponibles</p>
-                )}
+                    <h3 className="text-lg font-semibold mb-2">{marker.title}</h3>
+                    {isLoading ? (
+                        <p>Cargando detalles...</p>
+                    ) : (
+                        <>
+                            <p className="text-sm mb-3">
+                                {extendedMarker?.description || 'No hay descripción disponible'}
+                            </p>
+                            <small className="text-xs text-gray-400 italic">
+                                {extendedMarker?.tag || 'Sin etiqueta'}
+                            </small>
+                            <p className="text-sm text-gray-500">
+                                {marker.category} - {marker.subcategory}
+                            </p>
+                            {extendedMarker?.imageFiles && extendedMarker.imageFiles.length > 0 ? (
+                                <ImageCarousel imageFiles={extendedMarker.imageFiles} />
+                            ) : (
+                                <p className="text-xs text-gray-400 italic">No hay imágenes disponibles</p>
+                            )}
+                        </>
+                    )}
                 </div>
-                </Popup>
-            </Marker>
-    )
+            </Popup>
+        </Marker>
+    );
 }
