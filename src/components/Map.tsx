@@ -4,13 +4,32 @@ import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import MarkerForm from './MarkerForm';
 import MarkerPopup from './Popup';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { categoryColors, subcategoryIcons } from './MarkerForm';
+import { divIcon } from 'leaflet';
+import { renderToString } from 'react-dom/server';
 
-const DefaultIcon = L.icon({
-  iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-});
+const createCustomIcon = (category: string, subcategory: string) => {
+  const iconHtml = renderToString(
+    <div className="custom-marker-icon">
+      <FontAwesomeIcon
+        icon={subcategoryIcons[subcategory]}
+        style={{ 
+          color: categoryColors[category],
+          fontSize: '20px'
+        }}
+      />
+    </div>
+  );
 
-L.Marker.prototype.options.icon = DefaultIcon;
+  return divIcon({
+    html: iconHtml,
+    className: 'custom-div-icon',
+    iconSize: [40, 52],
+    iconAnchor: [20, 52],
+    popupAnchor: [0, -48]
+  });
+};
 
 const MapClickHandler = ({ onClick }: { onClick: (pos: [number, number]) => void }) => {
   useMapEvents({

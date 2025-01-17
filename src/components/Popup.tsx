@@ -1,8 +1,10 @@
-import {useState, useEffect} from 'react'
+import {useState} from 'react'
 import ImageCarousel from "./ImageCarousel"
 import {Marker, Popup} from 'react-leaflet';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { categoryColors, subcategoryIcons } from './MarkerForm';
+import { divIcon } from 'leaflet';
+import { renderToString } from 'react-dom/server';
 
 type MarkerType = {
     _id: string;
@@ -23,10 +25,31 @@ type ExtendedMarker = {
     coordinates: [number, number];
 };
 
+const createCustomIcon = (category: string, subcategory: string) => {
+    const iconHtml = renderToString(
+        <div className="custom-marker-icon">
+            <FontAwesomeIcon
+                icon={subcategoryIcons[subcategory]}
+                style={{ 
+                    color: categoryColors[category],
+                    fontSize: '24px'
+                }}
+            />
+        </div>
+    );
+
+    return divIcon({
+        html: iconHtml,
+        className: 'custom-div-icon',
+        iconSize: [30, 30],
+        iconAnchor: [15, 30]
+    });
+};
+
 export default function MarkerPopup({marker}: {marker: MarkerType}) {
     const [extendedMarker, setExtendedMarker] = useState<ExtendedMarker | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-    const [isOpen, setIsOpen] = useState(false);
+    
 
     const fetchMarkerDetails = async () => {
         console.log('🎯 Intentando cargar detalles del marcador:', marker._id);
@@ -56,6 +79,7 @@ export default function MarkerPopup({marker}: {marker: MarkerType}) {
     return (
         <Marker 
             position={marker.coordinates}
+            icon={createCustomIcon(marker.category, marker.subcategory)}
             eventHandlers={{
                 click: () => {
                     console.log('🎯 Marcador clickeado');
