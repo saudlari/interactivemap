@@ -1,6 +1,9 @@
 import {useState, useEffect} from 'react'
 import ImageCarousel from "./ImageCarousel"
 import {Marker, Popup} from 'react-leaflet';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { categoryColors, subcategoryIcons } from './MarkerForm';
+
 type MarkerType = {
     _id: string;
     title: string;
@@ -65,7 +68,18 @@ export default function MarkerPopup({marker}: {marker: MarkerType}) {
                 maxWidth={400} 
             >
                 <div className="popup-content">
-                    <h3 className="text-lg font-semibold mb-2">{marker.title}</h3>
+                    <div className="flex flex-col items-center mb-4">
+                        <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 mb-2">
+                            <FontAwesomeIcon
+                                icon={subcategoryIcons[marker.subcategory]}
+                                className="text-2xl"
+                                style={{ 
+                                    color: categoryColors[marker.category]
+                                }}
+                            />
+                        </div>
+                        <h3 className="text-lg font-semibold text-center">{marker.title}</h3>
+                    </div>
                     {isLoading ? (
                         <p>Cargando detalles...</p>
                     ) : (

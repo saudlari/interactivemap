@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import ImageUploader from './ImageUploader';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+
 interface MarkerFormProps {
   position: [number, number] | null;
   onSubmit: (data: MarkerFormData) => void;
@@ -18,6 +21,39 @@ interface MarkerFormData {
   subcategory: string;
   coordinates: [number, number] | null;
 }
+
+import {
+  faLeaf,          // Medio Ambiente
+  faVenusMars,     // Feminismos
+  faBuilding,      // Servicios Públicos
+  faHome,          // Vivienda
+  faCity,          // Urbanismo
+  faBus,           // Movilidad
+  faPalette,       // Cultura
+  faBriefcase,     // Economía y empleo
+  faFutbol,        // Deporte
+  faMonument       // Memoria democrática
+} from '@fortawesome/free-solid-svg-icons';
+
+// Exportar las constantes para poder usarlas en otros componentes
+export const categoryColors = {
+  'Conflictos': '#f05454',    // Rojo
+  'Propuestas': '#004f59',    // Verde azulado
+  'Iniciativas': '#ffd700'    // Dorado
+};
+
+export const subcategoryIcons = {
+  'Medio Ambiente': faLeaf,
+  'Feminismos': faVenusMars,
+  'Servicios Públicos': faBuilding,
+  'Vivienda': faHome,
+  'Urbanismo': faCity,
+  'Movilidad': faBus,
+  'Cultura': faPalette,
+  'Economía y empleo': faBriefcase,
+  'Deporte': faFutbol,
+  'Memoria democrática': faMonument
+};
 
 const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel }) => {
   // Inicializar formData con el tipo definido en MarkerFormData
@@ -86,6 +122,22 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
   return (
     <div className="marker-form-container">
       <h3 className="marker-form-title">Agregar Marcador</h3>
+      
+      {/* Añadir el icono debajo del título */}
+      {formData.subcategory && formData.category && (
+        <div className="flex justify-center items-center mt-4 mb-6">
+          <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100">
+            <FontAwesomeIcon
+              icon={subcategoryIcons[formData.subcategory as keyof typeof subcategoryIcons]}
+              className="text-2xl"
+              style={{ 
+                color: categoryColors[formData.category as keyof typeof categoryColors]
+              }}
+            />
+          </div>
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="marker-form space-y-4">
         {/* Campo para la categoría */}
         <div className="marker-form-group">
