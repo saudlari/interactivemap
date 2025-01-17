@@ -53,10 +53,21 @@ const Map: React.FC<{ selectedCategory: string; selectedSubcategory: string }> =
     fetchMarkers();
   }, []);
 
-  const filteredMarkers = markers.filter(marker =>
-    (selectedCategory ? marker.category === selectedCategory : true) &&
-    (selectedSubcategory ? marker.subcategory === selectedSubcategory : true)
-  );
+  const filteredMarkers = markers.filter(marker => {
+    const categoryArray = selectedCategory ? selectedCategory.split(',') : [];
+    const subcategoryArray = selectedSubcategory ? selectedSubcategory.split(',') : [];
+    
+    // Si no hay filtros seleccionados, mostrar todos los marcadores
+    if (categoryArray.length === 0 && subcategoryArray.length === 0) {
+      return true;
+    }
+
+    // Mostrar marcadores que coincidan con CUALQUIERA de las categorías seleccionadas
+    const matchesCategory = categoryArray.length === 0 || categoryArray.includes(marker.category);
+    const matchesSubcategory = subcategoryArray.length === 0 || subcategoryArray.includes(marker.subcategory);
+
+    return matchesCategory && matchesSubcategory;
+  });
 
   const handleMapClick = (coordinates: [number, number]) => {
     setFormPosition(coordinates);

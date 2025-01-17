@@ -10,17 +10,21 @@ const VerticalNav: React.FC<VerticalNavProps> = ({ onFilterChange }) => {
   const [selectedSubcategories, setSelectedSubcategories] = useState<string[]>([]);
 
   const handleCategoryClick = (category: string) => {
-    setSelectedCategories(prev =>
-      prev.includes(category) ? prev.filter(c => c !== category) : [...prev, category]
-    );
-    onFilterChange(category, selectedSubcategories.join(','));
+    const updatedCategories = selectedCategories.includes(category)
+      ? selectedCategories.filter(c => c !== category)
+      : [...selectedCategories, category];
+      
+    setSelectedCategories(updatedCategories);
+    onFilterChange(updatedCategories.join(','), selectedSubcategories.join(','));
   };
 
   const handleSubcategoryClick = (subcategory: string) => {
-    setSelectedSubcategories(prev =>
-      prev.includes(subcategory) ? prev.filter(s => s !== subcategory) : [...prev, subcategory]
-    );
-    onFilterChange(selectedCategories.join(','), subcategory);
+    const updatedSubcategories = selectedSubcategories.includes(subcategory)
+      ? selectedSubcategories.filter(s => s !== subcategory)
+      : [...selectedSubcategories, subcategory];
+      
+    setSelectedSubcategories(updatedSubcategories);
+    onFilterChange(selectedCategories.join(','), updatedSubcategories.join(','));
   };
 
   return (
