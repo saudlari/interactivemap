@@ -1,6 +1,7 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLocationCrosshairs } from '@fortawesome/free-solid-svg-icons';
+import { faLocationCrosshairs, faSearch } from '@fortawesome/free-solid-svg-icons';
+import LocationAutocomplete from './LocationAutocomplete';
 
 interface NavbarProps {
   toggleVerticalNav: () => void;
@@ -17,7 +18,6 @@ const Navbar: React.FC<NavbarProps> = ({ toggleVerticalNav, setUserLocation }) =
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const coords: [number, number] = [position.coords.latitude, position.coords.longitude];
-        console.log('Ubicación obtenida:', coords);
         setUserLocation(coords);
       },
       (error) => {
@@ -27,26 +27,42 @@ const Navbar: React.FC<NavbarProps> = ({ toggleVerticalNav, setUserLocation }) =
     );
   };
 
+  const handleLocationSelect = (location: { lat: number; lon: number }) => {
+    setUserLocation([location.lat, location.lon]);
+  };
+
   return (
     <div className="absolute top-0 left-0 right-0 h-16 px-4 flex items-center bg-transparent z-50 space-x-4 justify-end">
-      <button
-        className="marker-form-button bg-[#004f59] text-white font-bold rounded-lg px-4 py-2 hover:bg-[#006d7a] transition-colors duration-300 shadow-lg mt-2"
-        onClick={handleLocationClick}
-      >
-        <FontAwesomeIcon icon={faLocationCrosshairs} className="mr-2" />
-        Mi ubicación
-      </button>
-      
-      <button
-        className="marker-form-button bg-[#f05454] text-white font-bold rounded-lg px-4 py-2 hover:bg-[#f36161] transition-colors duration-300 shadow-lg mt-2 flex items-center"
-        onClick={toggleVerticalNav}
-      >
-        <svg className="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 2a9 9 0 100 18 9 9 0 000-18zm0 16a7 7 0 100-14 7 7 0 000 14z" />
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16.293 16.293l4.707 4.707" />
-        </svg>
-        <span>Buscar</span>
-      </button>
+      <div className="flex items-center space-x-4">
+        {/* Buscador de ubicaciones */}
+        <div className="flex items-center bg-white rounded-lg shadow-lg">
+          <LocationAutocomplete onSelect={handleLocationSelect} />
+          <button
+            className="px-4 py-2 bg-[#004f59] text-white rounded-r-lg hover:bg-[#006d7a] transition-colors duration-300"
+            onClick={() => {}} // Se activará automáticamente al seleccionar una ubicación
+          >
+            <FontAwesomeIcon icon={faSearch} />
+          </button>
+        </div>
+
+        {/* Botón de Mi ubicación */}
+        <button
+          className="marker-form-button bg-[#004f59] text-white font-bold rounded-lg px-4 py-2 hover:bg-[#006d7a] transition-colors duration-300 shadow-lg"
+          onClick={handleLocationClick}
+        >
+          <FontAwesomeIcon icon={faLocationCrosshairs} className="mr-2" />
+          Mi ubicación
+        </button>
+        
+        {/* Botón de búsqueda/filtros */}
+        <button
+          className="marker-form-button bg-[#f05454] text-white font-bold rounded-lg px-4 py-2 hover:bg-[#f36161] transition-colors duration-300 shadow-lg flex items-center"
+          onClick={toggleVerticalNav}
+        >
+          <FontAwesomeIcon icon={faSearch} className="mr-2" />
+          <span>Filtros</span>
+        </button>
+      </div>
     </div>
   );
 };
