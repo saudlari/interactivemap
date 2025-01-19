@@ -360,3 +360,72 @@ textarea.marker-form-input {
 .animate-fade-in-out {
   animation: fadeInOut 5s ease-in-out forwards;
 }
+
+/* Estilos para la notificación */
+.notification-container {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  min-width: 300px;
+  transform-origin: top right;
+  animation: notificationSlide 0.3s ease forwards;
+}
+
+.notification-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.notification-icon {
+  font-size: 24px;
+  font-weight: bold;
+  color: white;
+}
+
+.notification-message {
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+@keyframes notificationSlide {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Animación de salida */
+.notification-exit {
+  animation: notificationExit 0.3s ease forwards;
+}
+
+@keyframes notificationExit {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.9);
+  }
+}
+
+/* Media queries para responsividad */
+@media (max-width: 640px) {
+  .notification-container {
+    top: 16px;
+    right: 16px;
+    left: 16px;
+    min-width: auto;
+  }
+}
