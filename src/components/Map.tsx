@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { categoryColors, subcategoryIcons } from './MarkerForm';
 import { divIcon } from 'leaflet';
 import { renderToString } from 'react-dom/server';
+import LocationMarker from './LocationMarker';
 
 const createCustomIcon = (category: string, subcategory: string) => {
   const iconHtml = renderToString(
@@ -106,12 +107,17 @@ const Map: React.FC<{ selectedCategory: string; selectedSubcategory: string }> =
   if (!isClient) return null;
   return (
     <div className="relative h-screen w-full">
-      <MapContainer center={[36.7213, -4.4214]} zoom={13} className="w-full h-full rounded-lg shadow-lg">
+      <MapContainer 
+        center={[36.7213, -4.4214]} 
+        zoom={13} 
+        className="w-full h-full rounded-lg shadow-lg"
+      >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         />
         
+        <LocationMarker />
         <MapClickHandler onClick={handleMapClick} />
         
         {filteredMarkers.map((marker, idx) => (
