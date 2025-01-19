@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { MapContainer, TileLayer, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import MarkerForm from './MarkerForm';
@@ -23,10 +23,21 @@ interface MarkerData {
   coordinates: [number, number];
 }
 
-const Map: React.FC<{ selectedCategory: string; selectedSubcategory: string }> = ({ selectedCategory, selectedSubcategory }) => {
+interface MapProps {
+  selectedCategory: string;
+  selectedSubcategory: string;
+  userLocation: [number, number] | null;
+}
+
+const Map: React.FC<MapProps> = ({ 
+  selectedCategory, 
+  selectedSubcategory,
+  userLocation 
+}) => {
   const [isClient, setIsClient] = useState(false);
   const [formPosition, setFormPosition] = useState<[number, number] | null>(null);
   const [markers, setMarkers] = useState<MarkerData[]>([]);
+  const mapRef = useRef<L.Map | null>(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -46,6 +57,12 @@ const Map: React.FC<{ selectedCategory: string; selectedSubcategory: string }> =
 
     fetchMarkers();
   }, []);
+
+  useEffect(() => {
+    if (userLocation && mapRef.current) {
+      mapRef.current.setView(userLocation, 16);
+    }
+  }, [userLocation]);
 
   const filteredMarkers = markers.filter(marker => {
     const categoryArray = selectedCategory ? selectedCategory.split(',') : [];
@@ -78,6 +95,11 @@ const Map: React.FC<{ selectedCategory: string; selectedSubcategory: string }> =
     setFormPosition(null);
   };
 
+  // Obtener la referencia del mapa cuando se monta
+  const handleMapMount = (map: L.Map) => {
+    mapRef.current = map;
+  };
+
   if (!isClient) return null;
   return (
     <div className="relative h-screen w-full">
@@ -85,6 +107,7 @@ const Map: React.FC<{ selectedCategory: string; selectedSubcategory: string }> =
         center={[36.7213, -4.4214]} 
         zoom={13} 
         className="w-full h-full rounded-lg shadow-lg"
+        ref={handleMapMount}
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

@@ -2,7 +2,12 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLocationCrosshairs } from '@fortawesome/free-solid-svg-icons';
 
-const Navbar: React.FC<{ toggleVerticalNav: () => void }> = ({ toggleVerticalNav }) => {
+interface NavbarProps {
+  toggleVerticalNav: () => void;
+  setUserLocation: (coords: [number, number]) => void;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ toggleVerticalNav, setUserLocation }) => {
   const handleLocationClick = () => {
     if (!navigator.geolocation) {
       alert('La geolocalización no está soportada en tu navegador');
@@ -11,8 +16,9 @@ const Navbar: React.FC<{ toggleVerticalNav: () => void }> = ({ toggleVerticalNav
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        // El mapa se actualizará automáticamente gracias al LocationMarker
-        console.log('Ubicación obtenida:', position.coords);
+        const coords: [number, number] = [position.coords.latitude, position.coords.longitude];
+        console.log('Ubicación obtenida:', coords);
+        setUserLocation(coords);
       },
       (error) => {
         console.error('Error obteniendo ubicación:', error);

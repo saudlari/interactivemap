@@ -11,6 +11,7 @@ const Map = dynamic(() => import('../components/Map'), { ssr: false });
 export default function Home() {
   const [showVerticalNav, setShowVerticalNav] = useState(false);
   const [filters, setFilters] = useState({ category: '', subcategory: '' });
+  const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
 
   const toggleVerticalNav = () => {
     setShowVerticalNav(!showVerticalNav);
@@ -22,7 +23,10 @@ export default function Home() {
 
   return (
     <div className="relative flex flex-col h-screen">
-      <Navbar toggleVerticalNav={toggleVerticalNav} />
+      <Navbar 
+        toggleVerticalNav={toggleVerticalNav} 
+        setUserLocation={setUserLocation} 
+      />
 
       <div className="flex-1 relative">
         {showVerticalNav && (
@@ -32,7 +36,11 @@ export default function Home() {
         )}
 
         <div className="relative z-30">
-          <Map selectedCategory={filters.category} selectedSubcategory={filters.subcategory} />
+          <Map 
+            selectedCategory={filters.category} 
+            selectedSubcategory={filters.subcategory}
+            userLocation={userLocation}
+          />
         </div>
       </div>
     </div>
