@@ -7,7 +7,7 @@ import {
     faTwitter, 
     faFacebook 
 } from '@fortawesome/free-brands-svg-icons';
-import { faShare, faLink } from '@fortawesome/free-solid-svg-icons';
+import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { categoryColors, subcategoryIcons } from './MarkerForm';
 import { divIcon } from 'leaflet';
 import { renderToString } from 'react-dom/server';
