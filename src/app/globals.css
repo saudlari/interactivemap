@@ -275,11 +275,20 @@ textarea.marker-form-input {
     opacity: 1;
   }
   70% {
-    transform: scale(3);
+    transform: scale(5);
     opacity: 0;
   }
   100% {
     transform: scale(1);
     opacity: 0;
   }
+}
+
+.leaflet-container {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='42' height='42' viewBox='0 0 32 32'><circle cx='16' cy='16' r='8' fill='%23f05454'/><rect x='15' y='24' width='2' height='16' fill='%23f05454' transform='rotate(0 16 32)'/></svg>") 16 32, auto !important;
+}
+
+/* Para cuando se está arrastrando */
+.leaflet-dragging .leaflet-container {
+  cursor: grabbing !important;
 }

@@ -1,9 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useMap } from 'react-leaflet';
 import L from 'leaflet';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
-import { renderToString } from 'react-dom/server';
 
 const LocationMarker = () => {
   const map = useMap();
