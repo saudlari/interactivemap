@@ -2,6 +2,12 @@ import {useState} from 'react'
 import ImageCarousel from "./ImageCarousel"
 import {Marker, Popup} from 'react-leaflet';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { 
+    faWhatsapp, 
+    faTwitter, 
+    faFacebook 
+} from '@fortawesome/free-brands-svg-icons';
+import { faShare, faLink } from '@fortawesome/free-solid-svg-icons';
 import { categoryColors, subcategoryIcons } from './MarkerForm';
 import { divIcon } from 'leaflet';
 import { renderToString } from 'react-dom/server';
@@ -76,6 +82,32 @@ export default function MarkerPopup({marker}: {marker: MarkerType}) {
         }
     };
 
+    const handleShare = (platform: string) => {
+        const shareTitle = encodeURIComponent(marker.title);
+        const shareUrl = encodeURIComponent(`${window.location.origin}/marker/${marker._id}`);
+        const description = encodeURIComponent(extendedMarker?.description || '');
+        
+        let shareLink = '';
+        
+        switch (platform) {
+            case 'whatsapp':
+                shareLink = `https://wa.me/?text=${shareTitle}%20-%20${description}%20${shareUrl}`;
+                break;
+            case 'twitter':
+                shareLink = `https://twitter.com/intent/tweet?text=${shareTitle}&url=${shareUrl}`;
+                break;
+            case 'facebook':
+                shareLink = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`;
+                break;
+            case 'copy':
+                navigator.clipboard.writeText(`${window.location.origin}/marker/${marker._id}`);
+                // Aquí podrías mostrar una notificación de "Enlace copiado"
+                return;
+        }
+        
+        window.open(shareLink, '_blank', 'noopener,noreferrer');
+    };
+
     return (
         <Marker 
             position={marker.coordinates}
@@ -122,6 +154,41 @@ export default function MarkerPopup({marker}: {marker: MarkerType}) {
                             ) : (
                                 <p className="text-xs text-gray-400 italic">No hay imágenes disponibles</p>
                             )}
+                            
+                            {/* Botones de compartir */}
+                            <div className="mt-4 pt-3 border-t border-gray-200">
+                                <p className="text-sm text-gray-600 mb-2">Compartir:</p>
+                                <div className="flex space-x-4 justify-center">
+                                    <button
+                                        onClick={() => handleShare('whatsapp')}
+                                        className="p-2 hover:bg-green-50 rounded-full transition-colors"
+                                        title="Compartir en WhatsApp"
+                                    >
+                                        <FontAwesomeIcon icon={faWhatsapp} className="text-green-500 text-xl" />
+                                    </button>
+                                    <button
+                                        onClick={() => handleShare('twitter')}
+                                        className="p-2 hover:bg-blue-50 rounded-full transition-colors"
+                                        title="Compartir en Twitter"
+                                    >
+                                        <FontAwesomeIcon icon={faTwitter} className="text-blue-400 text-xl" />
+                                    </button>
+                                    <button
+                                        onClick={() => handleShare('facebook')}
+                                        className="p-2 hover:bg-blue-50 rounded-full transition-colors"
+                                        title="Compartir en Facebook"
+                                    >
+                                        <FontAwesomeIcon icon={faFacebook} className="text-blue-600 text-xl" />
+                                    </button>
+                                    <button
+                                        onClick={() => handleShare('copy')}
+                                        className="p-2 hover:bg-gray-50 rounded-full transition-colors"
+                                        title="Copiar enlace"
+                                    >
+                                        <FontAwesomeIcon icon={faLink} className="text-gray-500 text-xl" />
+                                    </button>
+                                </div>
+                            </div>
                         </>
                     )}
                 </div>

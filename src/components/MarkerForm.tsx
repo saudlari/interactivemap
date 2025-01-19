@@ -124,6 +124,32 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
     }
   };
 
+  const handleShare = (platform: string) => {
+    const shareTitle = encodeURIComponent(formData.title);
+    const shareUrl = encodeURIComponent(`${window.location.origin}/marker/${formData._id}`);
+    const description = encodeURIComponent(formData.description || '');
+    
+    let shareLink = '';
+    
+    switch (platform) {
+        case 'whatsapp':
+            shareLink = `https://wa.me/?text=${shareTitle}%20-%20${description}%20${shareUrl}`;
+            break;
+        case 'twitter':
+            shareLink = `https://twitter.com/intent/tweet?text=${shareTitle}&url=${shareUrl}`;
+            break;
+        case 'facebook':
+            shareLink = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`;
+            break;
+        case 'copy':
+            navigator.clipboard.writeText(`${window.location.origin}/marker/${formData._id}`);
+            // Aquí podrías mostrar una notificación de "Enlace copiado"
+            return;
+    }
+    
+    window.open(shareLink, '_blank', 'noopener,noreferrer');
+  };
+
   return (
     <div className="marker-form-container">
       <h3 className="marker-form-title">Agregar Marcador</h3>
