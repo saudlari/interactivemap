@@ -21,7 +21,7 @@ const LocationMarker = () => {
       setView: false,
       maxZoom: 16,
       enableHighAccuracy: true,
-      watch: true
+      watch: false
     });
 
     // Manejador para cuando se encuentra la ubicación

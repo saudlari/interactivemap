@@ -1,36 +1,10 @@
 import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, useMapEvents } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
 import MarkerForm from './MarkerForm';
 import MarkerPopup from './Popup';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { categoryColors, subcategoryIcons } from './MarkerForm';
-import { divIcon } from 'leaflet';
-import { renderToString } from 'react-dom/server';
 import LocationMarker from './LocationMarker';
 
-const createCustomIcon = (category: string, subcategory: string) => {
-  const iconHtml = renderToString(
-    <div className="custom-marker-icon">
-      <FontAwesomeIcon
-        icon={subcategoryIcons[subcategory]}
-        style={{ 
-          color: categoryColors[category],
-          fontSize: '20px'
-        }}
-      />
-    </div>
-  );
-
-  return divIcon({
-    html: iconHtml,
-    className: 'custom-div-icon',
-    iconSize: [40, 52],
-    iconAnchor: [20, 52],
-    popupAnchor: [0, -48]
-  });
-};
 
 const MapClickHandler = ({ onClick }: { onClick: (pos: [number, number]) => void }) => {
   useMapEvents({
@@ -128,7 +102,7 @@ const Map: React.FC<{ selectedCategory: string; selectedSubcategory: string }> =
       {formPosition && (
         <MarkerForm
           position={formPosition}
-          onSubmit={handleFormSubmit}
+          onSubmit={(data: MarkerData) => handleFormSubmit(data)}
           onCancel={handleFormCancel}
         />
       )}
