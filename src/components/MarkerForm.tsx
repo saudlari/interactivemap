@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import ImageUploader from './ImageUploader';
+import Notification from './Notification';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -56,17 +57,17 @@ export const subcategoryIcons = {
 };
 
 const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel }) => {
-  // Inicializar formData con el tipo definido en MarkerFormData
   const [formData, setFormData] = useState<MarkerFormData>({
     title: '',
     description: '',
     tag: '',
-    imageFiles: [], // Inicializar imageFiles como un array vacío
+    imageFiles: [],
     link: '',
     category: 'Conflictos',
     subcategory: 'Medio Ambiente',
     coordinates: position,
   });
+  const [showNotification, setShowNotification] = useState(false);
 
   useEffect(() => {
     setFormData((prevData) => ({ ...prevData, coordinates: position }));
@@ -77,7 +78,6 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-  // Esta función recibe las imágenes en base64 desde ImageUploader y actualiza `imageFiles`
   const handleImageChange = (base64Images: string[]) => {
     setFormData((prevData) => ({ ...prevData, imageFiles: base64Images }));
   };
@@ -97,22 +97,27 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
         const errorData = await response.json();
         console.error('Error al guardar el marcador:', errorData);
         alert(`Error: ${errorData.error || 'Error desconocido'}`);
-        return; // Salir de la función si hay un error
+        return;
       }
 
       const data = await response.json();
-      onSubmit(data);
-      // Resetear el formulario
-      setFormData({
-        title: '',
-        description: '',
-        tag: '',
-        imageFiles: [],
-        link: '',
-        category: 'Conflictos',
-        subcategory: 'Medio Ambiente',
-        coordinates: position,
-      });
+      setShowNotification(true);
+      
+      // Esperar un momento antes de cerrar el formulario
+      setTimeout(() => {
+        onSubmit(data);
+        // Resetear el formulario
+        setFormData({
+          title: '',
+          description: '',
+          tag: '',
+          imageFiles: [],
+          link: '',
+          category: 'Conflictos',
+          subcategory: 'Medio Ambiente',
+          coordinates: position,
+        });
+      }, 1000);
     } catch (error) {
       console.error('Error:', error);
       alert('Error al guardar el marcador. Por favor, intenta de nuevo.');
@@ -252,6 +257,14 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
           </button>
         </div>
       </form>
+
+      {showNotification && (
+        <Notification
+          message="¡Marcador creado con éxito!"
+          type="success"
+          onClose={() => setShowNotification(false)}
+        />
+      )}
     </div>
   );
 };
