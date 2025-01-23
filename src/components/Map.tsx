@@ -56,6 +56,13 @@ const Map: React.FC<MapProps> = ({
     };
 
     fetchMarkers();
+
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.remove(); // Limpia el mapa cuando el componente se desmonta
+        mapRef.current = null;
+      }
+    };
   }, []);
 
   useEffect(() => {

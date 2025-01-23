@@ -125,138 +125,148 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
   };
     
   return (
-    <div className="marker-form-container">
-      <h3 className="marker-form-title">Agregar Marcador</h3>
-      
-      {/* Añadir el icono debajo del título */}
-      {formData.subcategory && formData.category && (
-        <div className="flex justify-center items-center mt-4 mb-6">
-          <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100">
-            <FontAwesomeIcon
-              icon={subcategoryIcons[formData.subcategory as keyof typeof subcategoryIcons]}
-              className="text-2xl"
-              style={{ 
-                color: categoryColors[formData.category as keyof typeof categoryColors]
-              }}
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black bg-opacity-50">
+      <div className="marker-form-container bg-white rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto p-4">
+        <h3 className="text-xl font-bold text-[#004f59] mb-4">
+          Agregar Marcador
+        </h3>
+        
+        {/* Añadir el icono debajo del título */}
+        {formData.subcategory && formData.category && (
+          <div className="flex justify-center items-center mt-4 mb-6">
+            <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100">
+              <FontAwesomeIcon
+                icon={subcategoryIcons[formData.subcategory as keyof typeof subcategoryIcons]}
+                className="text-2xl"
+                style={{ 
+                  color: categoryColors[formData.category as keyof typeof categoryColors]
+                }}
+              />
+            </div>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Campo para la categoría */}
+          <div className="marker-form-group">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Categoría:
+            </label>
+            <select
+              name="category"
+              value={formData.category}
+              onChange={handleInputChange}
+              className="w-full p-2 text-sm border rounded-lg focus:ring-[#004f59] focus:border-[#004f59]"
+            >
+              <option value="Conflictos">Conflictos</option>
+              <option value="Propuestas">Propuestas</option>
+              <option value="Iniciativas">Iniciativas</option>
+            </select>
+          </div>
+
+          {/* Campo para la subcategoría */}
+          <div className="marker-form-group">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Subcategoría:
+            </label>
+            <select
+              name="subcategory"
+              value={formData.subcategory}
+              onChange={handleInputChange}
+              className="w-full p-2 text-sm border rounded-lg focus:ring-[#004f59] focus:border-[#004f59]"
+            >
+              <option value="Medio Ambiente">Medio Ambiente</option>
+              <option value="Feminismos">Feminismos</option>
+              <option value="Servicios Públicos">Servicios Públicos</option>
+              <option value="Vivienda">Vivienda</option>
+              <option value="Urbanismo">Urbanismo</option>
+              <option value="Movilidad">Movilidad</option>
+              <option value="Cultura">Cultura</option>
+              <option value="Economía y empleo">Economía y empleo</option>
+              <option value="Deporte">Deporte</option>
+              <option value="Memoria democrática">Memoria democrática</option>
+            </select>
+          </div>
+
+          {/* Campo para el título */}
+          <div className="marker-form-group">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Título:
+            </label>
+            <input
+              type="text"
+              name="title"
+              value={formData.title}
+              onChange={handleInputChange}
+              required
+              className="w-full p-2 text-sm border rounded-lg focus:ring-[#004f59] focus:border-[#004f59]"
             />
           </div>
-        </div>
-      )}
 
-      <form onSubmit={handleSubmit} className="marker-form space-y-4">
-        {/* Campo para la categoría */}
-        <div className="marker-form-group">
-          <label htmlFor="category" className="marker-form-label text-[#004f59]">Categoría:</label>
-          <select
-            id="category"
-            name="category"
-            value={formData.category}
-            onChange={handleInputChange}
-            className="marker-form-input bg-[#f0f4f8] text-[#004f59] border border-gray-300 rounded-lg p-2 focus:border-[#004f59] focus:ring-1 focus:ring-[#004f59]"
-          >
-            <option value="Conflictos">Conflictos</option>
-            <option value="Propuestas">Propuestas</option>
-            <option value="Iniciativas">Iniciativas</option>
-          </select>
-        </div>
+          {/* Campo para la descripción */}
+          <div className="marker-form-group">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Descripción:
+            </label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+              required
+              className="w-full p-2 text-sm border rounded-lg focus:ring-[#004f59] focus:border-[#004f59]"
+            />
+          </div>
 
-        {/* Campo para la subcategoría */}
-        <div className="marker-form-group">
-          <label htmlFor="subcategory" className="marker-form-label text-[#004f59]">Subcategoría:</label>
-          <select
-            id="subcategory"
-            name="subcategory"
-            value={formData.subcategory}
-            onChange={handleInputChange}
-            className="marker-form-input bg-[#f0f4f8] text-[#004f59] border border-gray-300 rounded-lg p-2 focus:border-[#004f59] focus:ring-1 focus:ring-[#004f59]"
-          >
-            <option value="Medio Ambiente">Medio Ambiente</option>
-            <option value="Feminismos">Feminismos</option>
-            <option value="Servicios Públicos">Servicios Públicos</option>
-            <option value="Vivienda">Vivienda</option>
-            <option value="Urbanismo">Urbanismo</option>
-            <option value="Movilidad">Movilidad</option>
-            <option value="Cultura">Cultura</option>
-            <option value="Economía y empleo">Economía y empleo</option>
-            <option value="Deporte">Deporte</option>
-            <option value="Memoria democrática">Memoria democrática</option>
-          </select>
-        </div>
+          {/* Campo para el tag */}
+          <div className="marker-form-group">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Tag:
+            </label>
+            <input
+              type="text"
+              name="tag"
+              value={formData.tag}
+              onChange={handleInputChange}
+              required
+              className="w-full p-2 text-sm border rounded-lg focus:ring-[#004f59] focus:border-[#004f59]"
+            />
+          </div>
 
-        {/* Campo para el título */}
-        <div className="marker-form-group">
-          <label htmlFor="title" className="marker-form-label text-[#004f59]">Título:</label>
-          <input
-            type="text"
-            id="title"
-            name="title"
-            value={formData.title}
-            onChange={handleInputChange}
-            required
-            className="marker-form-input bg-[#f0f4f8] text-[#004f59] border border-gray-300 rounded-lg p-2 focus:border-[#004f59] focus:ring-1 focus:ring-[#004f59]"
-          />
-        </div>
+          {/* Cargador de imágenes */}
+          <ImageUploader onChange={handleImageChange} />
 
-        {/* Campo para la descripción */}
-        <div className="marker-form-group">
-          <label htmlFor="description" className="marker-form-label text-[#004f59]">Descripción:</label>
-          <textarea
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleInputChange}
-            required
-            className="marker-form-input bg-[#f0f4f8] text-[#004f59] border border-gray-300 rounded-lg p-2 focus:border-[#004f59] focus:ring-1 focus:ring-[#004f59]"
-          />
-        </div>
+          {/* Campo para el enlace */}
+          <div className="marker-form-group">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Enlace:
+            </label>
+            <input
+              type="url"
+              name="link"
+              value={formData.link}
+              onChange={handleInputChange}
+              className="w-full p-2 text-sm border rounded-lg focus:ring-[#004f59] focus:border-[#004f59]"
+            />
+          </div>
 
-        {/* Campo para el tag */}
-        <div className="marker-form-group">
-          <label htmlFor="tag" className="marker-form-label text-[#004f59]">Tag:</label>
-          <input
-            type="text"
-            id="tag"
-            name="tag"
-            value={formData.tag}
-            onChange={handleInputChange}
-            required
-            className="marker-form-input bg-[#f0f4f8] text-[#004f59] border border-gray-300 rounded-lg p-2 focus:border-[#004f59] focus:ring-1 focus:ring-[#004f59]"
-          />
-        </div>
-
-        {/* Cargador de imágenes */}
-        <ImageUploader onChange={handleImageChange} />
-
-        {/* Campo para el enlace */}
-        <div className="marker-form-group">
-          <label htmlFor="link" className="marker-form-label text-[#004f59]">Enlace:</label>
-          <input
-            type="url"
-            id="link"
-            name="link"
-            value={formData.link}
-            onChange={handleInputChange}
-            className="marker-form-input bg-[#f0f4f8] text-[#004f59] border border-gray-300 rounded-lg p-2 focus:border-[#004f59] focus:ring-1 focus:ring-[#004f59]"
-          />
-        </div>
-
-        {/* Botones de acción */}
-        <div className="marker-form-actions flex justify-end space-x-4">
-          <button
-            type="button"
-            onClick={onCancel}
-            className="marker-form-button bg-[#004f59] text-white rounded-lg px-4 py-2 hover:bg-[#1e5f74] transition-colors duration-300 shadow-lg"
-          >
-            Cancelar
-          </button>
-          <button
-            type="submit"
-            className="marker-form-button bg-[#f05454] text-white font-bold rounded-lg px-4 py-2 hover:bg-[#f36161] transition-colors duration-300 shadow-lg"
-          >
-            Crear marcador
-          </button>
-        </div>
-      </form>
+          {/* Botones de acción */}
+          <div className="flex justify-end space-x-3 mt-6">
+            <button
+              type="button"
+              onClick={onCancel}
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 text-sm font-medium text-white bg-[#004f59] rounded-lg hover:bg-[#006d7a]"
+            >
+              Crear marcador
+            </button>
+          </div>
+        </form>
+      </div>
 
       {showNotification && (
         <Notification

@@ -32,36 +32,38 @@ const Navbar: React.FC<NavbarProps> = ({ toggleVerticalNav, setUserLocation }) =
   };
 
   return (
-    <div className="absolute top-0 left-0 right-0 h-16 px-4 flex items-center bg-transparent z-50 space-x-4 justify-end">
-      <div className="flex items-center space-x-4">
+    <div className="fixed top-0 left-0 right-0 h-[60px] px-4 bg-white/95 backdrop-blur-sm shadow-lg z-50 flex items-center justify-end">
+      <div className="flex items-center space-x-2 md:space-x-4">
         {/* Buscador de ubicaciones */}
-        <div className="flex items-center bg-white rounded-lg shadow-lg">
+        <div className="flex items-center bg-white rounded-lg shadow-lg w-full md:w-auto">
           <LocationAutocomplete onSelect={handleLocationSelect} />
           <button
-            className="px-4 py-2 bg-[#004f59] text-white rounded-r-lg hover:bg-[#006d7a] transition-colors duration-300"
-            onClick={() => {}} // Se activará automáticamente al seleccionar una ubicación
+            className="px-2 md:px-4 py-2 bg-[#004f59] text-white rounded-r-lg hover:bg-[#006d7a] transition-colors duration-300"
+            onClick={() => {}}
           >
             <FontAwesomeIcon icon={faSearch} />
           </button>
         </div>
 
-        {/* Botón de Mi ubicación */}
-        <button
-          className="marker-form-button bg-[#004f59] text-white font-bold rounded-lg px-4 py-2 hover:bg-[#006d7a] transition-colors duration-300 shadow-lg"
-          onClick={handleLocationClick}
-        >
-          <FontAwesomeIcon icon={faLocationCrosshairs} className="mr-2" />
-          Mi ubicación
-        </button>
-        
-        {/* Botón de búsqueda/filtros */}
-        <button
-          className="marker-form-button bg-[#f05454] text-white font-bold rounded-lg px-4 py-2 hover:bg-[#f36161] transition-colors duration-300 shadow-lg flex items-center"
-          onClick={toggleVerticalNav}
-        >
-          <FontAwesomeIcon icon={faSearch} className="mr-2" />
-          <span>Filtros</span>
-        </button>
+        <div className="flex space-x-2 md:space-x-4 w-full md:w-auto justify-center">
+          {/* Botón de Mi ubicación */}
+          <button
+            className="flex-1 md:flex-none marker-form-button bg-[#004f59] text-white font-bold rounded-lg px-2 md:px-4 py-2 hover:bg-[#006d7a] transition-colors duration-300 shadow-lg text-sm md:text-base"
+            onClick={handleLocationClick}
+          >
+            <FontAwesomeIcon icon={faLocationCrosshairs} className="mr-2" />
+            <span className="hidden md:inline">Mi ubicación</span>
+          </button>
+          
+          {/* Botón de búsqueda/filtros */}
+          <button
+            className="flex-1 md:flex-none marker-form-button bg-[#f05454] text-white font-bold rounded-lg px-2 md:px-4 py-2 hover:bg-[#f36161] transition-colors duration-300 shadow-lg flex items-center justify-center text-sm md:text-base"
+            onClick={toggleVerticalNav}
+          >
+            <FontAwesomeIcon icon={faSearch} className="mr-2" />
+            <span>Filtros</span>
+          </button>
+        </div>
       </div>
     </div>
   );

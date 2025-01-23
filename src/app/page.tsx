@@ -28,10 +28,13 @@ export default function Home() {
         setUserLocation={setUserLocation} 
       />
 
-      <div className="flex-1 relative">
+      <div className="flex-1 relative pt-[60px]">
         {showVerticalNav && (
-          <div className="absolute top-0 left-0 z-40 w-64 h-full bg-gray-100 shadow-lg">
-            <VerticalNav onFilterChange={handleFilterChange} />
+          <div className="fixed top-[60px] left-0 z-40 w-full md:w-64 h-[calc(100vh-60px)] bg-gray-100 shadow-lg overflow-y-auto">
+            <VerticalNav 
+              onFilterChange={handleFilterChange}
+              toggleVerticalNav={toggleVerticalNav}
+            />
           </div>
         )}
 

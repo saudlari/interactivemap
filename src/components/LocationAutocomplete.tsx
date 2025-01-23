@@ -71,8 +71,8 @@ const LocationAutocomplete: React.FC<LocationAutocompleteProps> = ({ onSelect })
         type="text"
         value={query}
         onChange={handleInputChange}
-        placeholder="Buscar dirección..."
-        className="search-input"
+        placeholder="Buscar ubicación..."
+        className="w-full px-3 py-2 text-sm md:text-base rounded-l-lg focus:outline-none focus:ring-2 focus:ring-[#004f59]"
       />
       {isLoading && (
         <div className="suggestions-list">
