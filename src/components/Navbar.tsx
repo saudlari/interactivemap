@@ -32,7 +32,17 @@ const Navbar: React.FC<NavbarProps> = ({ toggleVerticalNav, setUserLocation }) =
   };
 
   return (
-    <div className="fixed top-0 left-0 right-0 h-[60px] px-4 bg-white/95 backdrop-blur-sm shadow-lg z-50 flex items-center justify-end">
+    <div className="fixed top-0 left-0 right-0 h-[60px] px-4 bg-white/95 backdrop-blur-sm shadow-lg z-50 flex items-center justify-between">
+      {/* Botón de filtros en el lado izquierdo */}
+      <button
+        className="marker-form-button bg-[#f05454] text-white font-bold rounded-lg px-2 md:px-4 py-2 hover:bg-[#f36161] transition-colors duration-300 shadow-lg flex items-center justify-center text-sm md:text-base"
+        onClick={toggleVerticalNav}
+      >
+        <FontAwesomeIcon icon={faSearch} className="mr-2" />
+        <span>Filtros</span>
+      </button>
+
+      {/* Contenedor derecho para los otros elementos */}
       <div className="flex items-center space-x-2 md:space-x-4">
         {/* Buscador de ubicaciones */}
         <div className="flex items-center bg-white rounded-lg shadow-lg w-full md:w-auto">
@@ -44,26 +54,15 @@ const Navbar: React.FC<NavbarProps> = ({ toggleVerticalNav, setUserLocation }) =
             <FontAwesomeIcon icon={faSearch} />
           </button>
         </div>
-
-        <div className="flex space-x-2 md:space-x-4 w-full md:w-auto justify-center">
-          {/* Botón de Mi ubicación */}
-          <button
-            className="flex-1 md:flex-none marker-form-button bg-[#004f59] text-white font-bold rounded-lg px-2 md:px-4 py-2 hover:bg-[#006d7a] transition-colors duration-300 shadow-lg text-sm md:text-base"
-            onClick={handleLocationClick}
-          >
-            <FontAwesomeIcon icon={faLocationCrosshairs} className="mr-2" />
-            <span className="hidden md:inline">Mi ubicación</span>
-          </button>
-          
-          {/* Botón de búsqueda/filtros */}
-          <button
-            className="flex-1 md:flex-none marker-form-button bg-[#f05454] text-white font-bold rounded-lg px-2 md:px-4 py-2 hover:bg-[#f36161] transition-colors duration-300 shadow-lg flex items-center justify-center text-sm md:text-base"
-            onClick={toggleVerticalNav}
-          >
-            <FontAwesomeIcon icon={faSearch} className="mr-2" />
-            <span>Filtros</span>
-          </button>
-        </div>
+        
+        {/* Botón de Mi ubicación */}
+        <button
+          className="flex-none marker-form-button bg-[#004f59] text-white font-bold rounded-lg px-2 md:px-4 py-2 hover:bg-[#006d7a] transition-colors duration-300 shadow-lg text-sm md:text-base"
+          onClick={handleLocationClick}
+        >
+          <FontAwesomeIcon icon={faLocationCrosshairs} className="mr-2" />
+          <span className="hidden md:inline">Mi ubicación</span>
+        </button>
       </div>
     </div>
   );

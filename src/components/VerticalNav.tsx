@@ -79,7 +79,8 @@ const VerticalNav: React.FC<VerticalNavProps> = ({ onFilterChange, toggleVertica
           </ul>
         </div>
 
-        <div className="mb-6">
+        {/* Subcategorías */}
+        <div className="mb-4">
           <h2 className="text-lg font-semibold mb-2">Subcategorías</h2>
           <ul className="space-y-2">
             {[
@@ -109,7 +110,8 @@ const VerticalNav: React.FC<VerticalNavProps> = ({ onFilterChange, toggleVertica
         </div>
       </div>
 
-      <div className="p-4 border-t border-gray-200 mt-auto">
+      {/* Footer con botón fijo en la parte inferior */}
+      <div className="sticky bottom-0 p-4 border-t border-gray-200 bg-white mt-auto">
         <button
           onClick={toggleVerticalNav}
           className="w-full bg-[#004f59] text-white font-bold rounded-lg px-4 py-3 hover:bg-[#006d7a] transition-colors duration-300 shadow-lg"

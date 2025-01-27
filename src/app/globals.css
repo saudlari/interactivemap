@@ -491,15 +491,16 @@ textarea.marker-form-input {
 
   .vertical-nav {
     position: fixed;
-    top: 0;
+    top: 60px;
     left: 0;
     right: 0;
     bottom: 0;
     width: 100%;
-    height: 100vh;
+    height: calc(100vh - 60px);
     z-index: 1000;
-    overflow-y: auto;
-    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
   }
 
   .navbar-container {
@@ -543,6 +544,7 @@ textarea.marker-form-input {
 
   .vertical-nav {
     width: 300px;
+    right: auto;
   }
 }
 
