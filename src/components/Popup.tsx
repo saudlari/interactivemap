@@ -124,8 +124,8 @@ export default function MarkerPopup({marker}: {marker: MarkerType}) {
                 maxWidth={400} 
             >
                 <div className="popup-content">
-                    <div className="flex flex-col items-center mb-4">
-                        <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 mb-2">
+                    <div className="flex flex-col items-center mb-2">
+                        <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 mb-1">
                             <FontAwesomeIcon
                                 icon={subcategoryIcons[marker.subcategory]}
                                 className="text-2xl"
@@ -134,8 +134,11 @@ export default function MarkerPopup({marker}: {marker: MarkerType}) {
                                 }}
                             />
                         </div>
-                        <h3 className="text-lg font-semibold text-center">{marker.title}</h3>
+                        <p className="text-sm text-gray-500 text-center">
+                            {marker.category} - {marker.subcategory}
+                        </p>
                     </div>
+                    <h3 className="text-lg font-semibold text-center">{marker.title}</h3>
                     {isLoading ? (
                         <p>Cargando detalles...</p>
                     ) : (
@@ -146,9 +149,7 @@ export default function MarkerPopup({marker}: {marker: MarkerType}) {
                             <small className="text-xs text-gray-400 italic">
                                 {extendedMarker?.tag || 'Sin etiqueta'}
                             </small>
-                            <p className="text-sm text-gray-500">
-                                {marker.category} - {marker.subcategory}
-                            </p>
+                           
                             {extendedMarker?.imageFiles && extendedMarker.imageFiles.length > 0 ? (
                                 <ImageCarousel imageFiles={extendedMarker.imageFiles} />
                             ) : (
