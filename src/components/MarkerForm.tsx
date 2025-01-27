@@ -125,28 +125,32 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
   };
     
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black bg-opacity-50">
-      <div className="marker-form-container bg-white rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto p-4">
-        <h3 className="text-xl font-bold text-[#004f59] mb-4">
-          Agregar Marcador
-        </h3>
-        
-        {/* Añadir el icono debajo del título */}
-        {formData.subcategory && formData.category && (
-          <div className="flex justify-center items-center mt-4 mb-6">
-            <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100">
-              <FontAwesomeIcon
-                icon={subcategoryIcons[formData.subcategory as keyof typeof subcategoryIcons]}
-                className="text-2xl"
-                style={{ 
-                  color: categoryColors[formData.category as keyof typeof categoryColors]
-                }}
-              />
-            </div>
+    <div className="marker-form-overlay">
+      <div className="marker-form-container">
+        <div className="text-center mb-4">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-2">
+            Agregar marcador
+          </h2>
+          <div className="coordinates-display inline-block">
+            📍 Lat: {position?.[0].toFixed(6)}, Lng: {position?.[1].toFixed(6)}
           </div>
-        )}
+        </div>
+        <form onSubmit={handleSubmit}>
+          {/* Añadir el icono debajo del título */}
+          {formData.subcategory && formData.category && (
+            <div className="flex justify-center items-center mt-4 mb-6">
+              <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100">
+                <FontAwesomeIcon
+                  icon={subcategoryIcons[formData.subcategory as keyof typeof subcategoryIcons]}
+                  className="text-2xl"
+                  style={{ 
+                    color: categoryColors[formData.category as keyof typeof categoryColors]
+                  }}
+                />
+              </div>
+            </div>
+          )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
           {/* Campo para la categoría */}
           <div className="marker-form-group">
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -256,17 +260,17 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
           </div>
 
           {/* Botones de acción */}
-          <div className="flex justify-end space-x-3 mt-6">
+          <div className="form-buttons">
             <button
               type="button"
               onClick={onCancel}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+              className="form-cancel-button"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="px-4 py-2 text-sm font-medium text-white bg-[#004f59] rounded-lg hover:bg-[#006d7a]"
+              className="form-submit-button"
             >
               Crear marcador
             </button>
