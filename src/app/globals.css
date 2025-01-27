@@ -264,6 +264,25 @@ textarea.marker-form-input {
   background: white;
   border-radius: 50%;
   box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  transform-origin: bottom;
+  animation: markerDropIn 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@keyframes markerDropIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(10px);
+  }
+  80% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0);
+  }
 }
 
 .custom-marker-icon::after {
@@ -560,4 +579,11 @@ textarea.marker-form-input {
   align-items: center;
   justify-content: center;
   z-index: 1000;
+}
+
+/* Clase para cuando el marcador está seleccionado */
+.marker-selected {
+  transform: scale(1.2);
+  transition: transform 0.3s ease;
+  z-index: 1000 !important;
 }
