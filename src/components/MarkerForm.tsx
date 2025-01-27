@@ -13,11 +13,11 @@ interface MarkerFormProps {
 
 // Definir una interfaz para el estado formData
 interface MarkerFormData {
-  title: string;
-  description: string;
-  tag: string;
-  imageFiles: string[]; // Asegura que TypeScript reconozca `imageFiles` como un array de strings
-  link: string;
+  title: string;       // máx 50 caracteres
+  description: string; // máx 200 caracteres
+  tag: string;        // máx 30 caracteres
+  imageFiles: string[];
+  link: string;       // máx 150 caracteres
   category: string;
   subcategory: string;
   coordinates: [number, number] | null;
@@ -198,6 +198,7 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
               name="title"
               value={formData.title}
               onChange={handleInputChange}
+              maxLength={50}
               required
               className="w-full p-2 text-sm border rounded-lg focus:ring-[#004f59] focus:border-[#004f59]"
             />
@@ -212,9 +213,12 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
               name="description"
               value={formData.description}
               onChange={handleInputChange}
+              maxLength={200}
               required
+              rows={4}
               className="w-full p-2 text-sm border rounded-lg focus:ring-[#004f59] focus:border-[#004f59]"
             />
+            <small className="text-gray-500 text-xs">{formData.description.length}/200</small>
           </div>
 
           {/* Campo para el tag */}
@@ -227,6 +231,7 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
               name="tag"
               value={formData.tag}
               onChange={handleInputChange}
+              maxLength={30}
               required
               className="w-full p-2 text-sm border rounded-lg focus:ring-[#004f59] focus:border-[#004f59]"
             />
@@ -245,6 +250,7 @@ const MarkerForm: React.FC<MarkerFormProps> = ({ position, onSubmit, onCancel })
               name="link"
               value={formData.link}
               onChange={handleInputChange}
+              maxLength={150}
               className="w-full p-2 text-sm border rounded-lg focus:ring-[#004f59] focus:border-[#004f59]"
             />
           </div>

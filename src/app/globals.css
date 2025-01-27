@@ -173,7 +173,22 @@ textarea.marker-form-input {
 
 .popup-content {
   width: 100%;
-  padding: 15px;
+  padding: 10px;
+}
+
+.popup-content p {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.popup-content a {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
 }
 
 /* Media queries */
