@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { MapContainer, TileLayer, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, useMapEvents, ZoomControl } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import MarkerForm from './MarkerForm';
 import MarkerPopup from './Popup';
@@ -115,11 +115,13 @@ const Map: React.FC<MapProps> = ({
         zoom={13} 
         className="w-full h-full rounded-lg shadow-lg"
         ref={handleMapMount}
+        zoomControl={false}
       >
         <TileLayer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         />
+        <ZoomControl position="bottomright" />
         
         <LocationMarker />
         <MapClickHandler onClick={handleMapClick} />
