@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 import ImageCarousel from "./ImageCarousel"
 import {Marker, Popup} from 'react-leaflet';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -55,10 +55,19 @@ const createCustomIcon = (category: string, subcategory: string) => {
 export default function MarkerPopup({marker}: {marker: MarkerType}) {
     const [extendedMarker, setExtendedMarker] = useState<ExtendedMarker | null>(null);
     const [isLoading, setIsLoading] = useState(false);
-    
+    const [isMobile, setIsMobile] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+
+    useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
 
     const fetchMarkerDetails = async () => {
         console.log('🎯 Intentando cargar detalles del marcador:', marker._id);
+        setIsOpen(true);
         setIsLoading(true);
 
         try {
@@ -82,118 +91,110 @@ export default function MarkerPopup({marker}: {marker: MarkerType}) {
         }
     };
 
-    const handleShare = (platform: string) => {
-        const shareTitle = encodeURIComponent(marker.title);
-        const shareUrl = encodeURIComponent(`${window.location.origin}/marker/${marker._id}`);
-        const description = encodeURIComponent(extendedMarker?.description || '');
-        
-        let shareLink = '';
-        
-        switch (platform) {
-            case 'whatsapp':
-                shareLink = `https://wa.me/?text=${shareTitle}%20-%20${description}%20${shareUrl}`;
-                break;
-            case 'twitter':
-                shareLink = `https://twitter.com/intent/tweet?text=${shareTitle}&url=${shareUrl}`;
-                break;
-            case 'facebook':
-                shareLink = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`;
-                break;
-            case 'copy':
-                navigator.clipboard.writeText(`${window.location.origin}/marker/${marker._id}`);
-                // Aquí podrías mostrar una notificación de "Enlace copiado"
-                return;
-        }
-        
-        window.open(shareLink, '_blank', 'noopener,noreferrer');
-    };
+    const popupContent = (
+        <div className="popup-content">
+            <div className="flex flex-col items-center mb-2">
+                <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 mb-1">
+                    <FontAwesomeIcon
+                        icon={subcategoryIcons[marker.subcategory]}
+                        className="text-2xl"
+                        style={{ 
+                            color: categoryColors[marker.category]
+                        }}
+                    />
+                </div>
+                <p className="text-sm text-gray-500 text-center">
+                    {marker.category} - {marker.subcategory}
+                </p>
+            </div>
+            <h3 className="text-lg font-semibold text-center">{marker.title}</h3>
+            {isLoading ? (
+                <p>Cargando detalles...</p>
+            ) : (
+                <>
+                    <p className="text-sm mb-3">
+                        {extendedMarker?.description || 'No hay descripción disponible'}
+                    </p>
+                    <small className="text-xs text-gray-400 italic">
+                        {extendedMarker?.tag || 'Sin etiqueta'}
+                    </small>
+                   
+                    {extendedMarker?.imageFiles && extendedMarker.imageFiles.length > 0 ? (
+                        <ImageCarousel imageFiles={extendedMarker.imageFiles} />
+                    ) : (
+                        <p className="text-xs text-gray-400 italic">No hay imágenes disponibles</p>
+                    )}
+                    
+                    {/* Botones de compartir */}
+                    <div className="mt-4 pt-3 border-t border-gray-200">
+                        <p className="text-sm text-gray-600 mb-2">Compartir:</p>
+                        <div className="flex space-x-4 justify-center">
+                            <button
+                                onClick={() => handleShare('whatsapp')}
+                                className="p-2 hover:bg-green-50 rounded-full transition-colors"
+                                title="Compartir en WhatsApp"
+                            >
+                                <FontAwesomeIcon icon={faWhatsapp} className="text-green-500 text-xl" />
+                            </button>
+                            <button
+                                onClick={() => handleShare('twitter')}
+                                className="p-2 hover:bg-blue-50 rounded-full transition-colors"
+                                title="Compartir en Twitter"
+                            >
+                                <FontAwesomeIcon icon={faTwitter} className="text-blue-400 text-xl" />
+                            </button>
+                            <button
+                                onClick={() => handleShare('facebook')}
+                                className="p-2 hover:bg-blue-50 rounded-full transition-colors"
+                                title="Compartir en Facebook"
+                            >
+                                <FontAwesomeIcon icon={faFacebook} className="text-blue-600 text-xl" />
+                            </button>
+                            <button
+                                onClick={() => handleShare('copy')}
+                                className="p-2 hover:bg-gray-50 rounded-full transition-colors"
+                                title="Copiar enlace"
+                            >
+                                <FontAwesomeIcon icon={faLink} className="text-gray-500 text-xl" />
+                            </button>
+                        </div>
+                    </div>
+                </>
+            )}
+        </div>
+    );
 
     return (
         <Marker 
             position={marker.coordinates}
             icon={createCustomIcon(marker.category, marker.subcategory)}
             eventHandlers={{
-                click: () => {
-                    console.log('🎯 Marcador clickeado');
-                    fetchMarkerDetails();
-                }
+                click: fetchMarkerDetails
             }}
         >
-            <Popup 
-                minWidth={250} 
-                maxWidth={400} 
-            >
-                <div className="popup-content">
-                    <div className="flex flex-col items-center mb-2">
-                        <div className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 mb-1">
-                            <FontAwesomeIcon
-                                icon={subcategoryIcons[marker.subcategory]}
-                                className="text-2xl"
-                                style={{ 
-                                    color: categoryColors[marker.category]
-                                }}
-                            />
+            {isMobile ? (
+                isOpen && (
+                    <div className="marker-popup-overlay">
+                        <div className="marker-popup-mobile">
+                            <button 
+                                onClick={() => setIsOpen(false)}
+                                className="absolute top-2 right-2 text-gray-500 p-2"
+                            >
+                                ✕
+                            </button>
+                            {popupContent}
                         </div>
-                        <p className="text-sm text-gray-500 text-center">
-                            {marker.category} - {marker.subcategory}
-                        </p>
                     </div>
-                    <h3 className="text-lg font-semibold text-center">{marker.title}</h3>
-                    {isLoading ? (
-                        <p>Cargando detalles...</p>
-                    ) : (
-                        <>
-                            <p className="text-sm mb-3">
-                                {extendedMarker?.description || 'No hay descripción disponible'}
-                            </p>
-                            <small className="text-xs text-gray-400 italic">
-                                {extendedMarker?.tag || 'Sin etiqueta'}
-                            </small>
-                           
-                            {extendedMarker?.imageFiles && extendedMarker.imageFiles.length > 0 ? (
-                                <ImageCarousel imageFiles={extendedMarker.imageFiles} />
-                            ) : (
-                                <p className="text-xs text-gray-400 italic">No hay imágenes disponibles</p>
-                            )}
-                            
-                            {/* Botones de compartir */}
-                            <div className="mt-4 pt-3 border-t border-gray-200">
-                                <p className="text-sm text-gray-600 mb-2">Compartir:</p>
-                                <div className="flex space-x-4 justify-center">
-                                    <button
-                                        onClick={() => handleShare('whatsapp')}
-                                        className="p-2 hover:bg-green-50 rounded-full transition-colors"
-                                        title="Compartir en WhatsApp"
-                                    >
-                                        <FontAwesomeIcon icon={faWhatsapp} className="text-green-500 text-xl" />
-                                    </button>
-                                    <button
-                                        onClick={() => handleShare('twitter')}
-                                        className="p-2 hover:bg-blue-50 rounded-full transition-colors"
-                                        title="Compartir en Twitter"
-                                    >
-                                        <FontAwesomeIcon icon={faTwitter} className="text-blue-400 text-xl" />
-                                    </button>
-                                    <button
-                                        onClick={() => handleShare('facebook')}
-                                        className="p-2 hover:bg-blue-50 rounded-full transition-colors"
-                                        title="Compartir en Facebook"
-                                    >
-                                        <FontAwesomeIcon icon={faFacebook} className="text-blue-600 text-xl" />
-                                    </button>
-                                    <button
-                                        onClick={() => handleShare('copy')}
-                                        className="p-2 hover:bg-gray-50 rounded-full transition-colors"
-                                        title="Copiar enlace"
-                                    >
-                                        <FontAwesomeIcon icon={faLink} className="text-gray-500 text-xl" />
-                                    </button>
-                                </div>
-                            </div>
-                        </>
-                    )}
-                </div>
-            </Popup>
+                )
+            ) : (
+                <Popup 
+                    minWidth={250} 
+                    maxWidth={400}
+                    onClose={() => setIsOpen(false)}
+                >
+                    {popupContent}
+                </Popup>
+            )}
         </Marker>
     );
 }
