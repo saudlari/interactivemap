@@ -22,30 +22,28 @@ export default function Home() {
   };
 
   return (
-    <div className="relative flex flex-col h-screen">
+    <div className="h-screen w-full overflow-hidden">
       <Navbar 
         toggleVerticalNav={toggleVerticalNav} 
         setUserLocation={setUserLocation} 
       />
-
-      <div className="flex-1 relative pt-[60px]">
+      <main className="h-[calc(100vh-60px)] w-full mt-[60px] relative">
         {showVerticalNav && (
-          <div className="fixed top-[60px] left-0 z-40 w-full md:w-64 h-[calc(100vh-60px)] bg-gray-100 shadow-lg overflow-y-auto">
+          <div className="fixed top-[60px] left-0 z-50 w-full md:w-64 h-[calc(100vh-60px)] bg-gray-100 shadow-lg overflow-y-auto">
             <VerticalNav 
               onFilterChange={handleFilterChange}
               toggleVerticalNav={toggleVerticalNav}
             />
           </div>
         )}
-
-        <div className="relative z-30">
+        <div className="absolute inset-0 z-30">
           <Map 
             selectedCategory={filters.category} 
             selectedSubcategory={filters.subcategory}
             userLocation={userLocation}
           />
         </div>
-      </div>
+      </main>
     </div>
   );
 }

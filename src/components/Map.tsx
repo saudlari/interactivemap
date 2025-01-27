@@ -109,11 +109,11 @@ const Map: React.FC<MapProps> = ({
 
   if (!isClient) return null;
   return (
-    <div className="relative h-screen w-full">
+    <div className="h-full w-full relative">
       <MapContainer 
         center={[36.7213, -4.4214]} 
         zoom={13} 
-        className="w-full h-full rounded-lg shadow-lg"
+        className="h-full w-full"
         ref={handleMapMount}
         zoomControl={false}
       >
