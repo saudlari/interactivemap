@@ -48,7 +48,7 @@ const LocationAutocomplete: React.FC<LocationAutocompleteProps> = ({ onSelect })
   };
 
   const handleSelect = (suggestion: any) => {
-    setQuery(suggestion.display_name.split(',')[0]);
+    setQuery(suggestion.display_name);
     setSuggestions([]);
     onSelect({
       lat: parseFloat(suggestion.lat),
@@ -87,7 +87,7 @@ const LocationAutocomplete: React.FC<LocationAutocompleteProps> = ({ onSelect })
               onClick={() => handleSelect(suggestion)}
               className="hover:bg-gray-100 cursor-pointer p-2"
             >
-              {suggestion.display_name.split(',').slice(0, 2).join(', ')}
+              {suggestion.display_name}
             </li>
           ))}
         </ul>
