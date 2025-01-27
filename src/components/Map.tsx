@@ -37,6 +37,7 @@ const Map: React.FC<MapProps> = ({
   const [isClient, setIsClient] = useState(false);
   const [formPosition, setFormPosition] = useState<[number, number] | null>(null);
   const [markers, setMarkers] = useState<MarkerData[]>([]);
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
   const mapRef = useRef<L.Map | null>(null);
 
   useEffect(() => {
@@ -88,7 +89,9 @@ const Map: React.FC<MapProps> = ({
   });
 
   const handleMapClick = (coordinates: [number, number]) => {
-    setFormPosition(coordinates);
+    if (!isPopupOpen) {
+      setFormPosition(coordinates);
+    }
   };
 
   const handleFormSubmit = (data: Omit<MarkerData, 'coordinates'>) => {
@@ -127,11 +130,16 @@ const Map: React.FC<MapProps> = ({
         <MapClickHandler onClick={handleMapClick} />
         
         {filteredMarkers.map((marker, idx) => (
-          <MarkerPopup key={idx} marker={marker} />
+          <MarkerPopup 
+            key={idx} 
+            marker={marker}
+            onPopupOpen={() => setIsPopupOpen(true)}
+            onPopupClose={() => setIsPopupOpen(false)}
+          />
         ))}
       </MapContainer>
 
-      {formPosition && (
+      {formPosition && !isPopupOpen && (
         <MarkerForm
           position={formPosition}
           onSubmit={(data: MarkerData) => handleFormSubmit(data)}

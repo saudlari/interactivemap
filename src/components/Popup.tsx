@@ -52,7 +52,15 @@ const createCustomIcon = (category: string, subcategory: string) => {
     });
 };
 
-export default function MarkerPopup({marker}: {marker: MarkerType}) {
+export default function MarkerPopup({
+    marker, 
+    onPopupOpen, 
+    onPopupClose
+}: {
+    marker: MarkerType;
+    onPopupOpen: () => void;
+    onPopupClose: () => void;
+}) {
     const [extendedMarker, setExtendedMarker] = useState<ExtendedMarker | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
@@ -65,9 +73,16 @@ export default function MarkerPopup({marker}: {marker: MarkerType}) {
         return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
+    const handleClose = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        setIsOpen(false);
+        onPopupClose();
+    };
+
     const fetchMarkerDetails = async () => {
         console.log('🎯 Intentando cargar detalles del marcador:', marker._id);
         setIsOpen(true);
+        onPopupOpen();
         setIsLoading(true);
 
         try {
@@ -174,10 +189,16 @@ export default function MarkerPopup({marker}: {marker: MarkerType}) {
         >
             {isMobile ? (
                 isOpen && (
-                    <div className="marker-popup-overlay">
-                        <div className="marker-popup-mobile">
+                    <div 
+                        className="marker-popup-overlay"
+                        onClick={handleClose}
+                    >
+                        <div 
+                            className="marker-popup-mobile"
+                            onClick={(e) => e.stopPropagation()}
+                        >
                             <button 
-                                onClick={() => setIsOpen(false)}
+                                onClick={handleClose}
                                 className="absolute top-2 right-2 text-gray-500 p-2"
                             >
                                 ✕
@@ -190,7 +211,10 @@ export default function MarkerPopup({marker}: {marker: MarkerType}) {
                 <Popup 
                     minWidth={250} 
                     maxWidth={400}
-                    onClose={() => setIsOpen(false)}
+                    onClose={() => {
+                        setIsOpen(false);
+                        onPopupClose();
+                    }}
                 >
                     {popupContent}
                 </Popup>
