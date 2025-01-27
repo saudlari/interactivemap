@@ -159,6 +159,8 @@ textarea.marker-form-input {
   width: auto !important;
   max-width: 90vw;
   margin: 13px 19px;
+  min-width: 200px;
+  max-width: 320px;
 }
 
 .leaflet-popup-content-wrapper {
@@ -167,8 +169,6 @@ textarea.marker-form-input {
 }
 
 .popup-content {
-  min-width: 200px;
-  max-width: 400px;
   width: 100%;
   padding: 15px;
 }
@@ -176,7 +176,7 @@ textarea.marker-form-input {
 /* Media queries */
 @media (max-width: 640px) {
   .leaflet-popup-content {
-    max-width: 95vw;
+    max-width: 280px;
   }
 
   .popup-content {
@@ -208,6 +208,10 @@ textarea.marker-form-input {
 }
 
 @media (max-width: 480px) {
+  .leaflet-popup-content {
+    max-width: 240px;
+  }
+
   .popup-content {
     max-width: 250px;
   }

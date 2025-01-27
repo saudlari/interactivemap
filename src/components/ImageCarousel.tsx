@@ -25,24 +25,26 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({ imageFiles }) => {
   };
 
   return (
-    <div className="w-full max-w-lg mx-auto">
+    <div className="w-full aspect-[4/3] relative">
       <Swiper
-        modules={[Navigation, Pagination]} // Habilita los módulos necesarios para Swiper
+        modules={[Navigation, Pagination]}
         spaceBetween={10}
         slidesPerView={1}
         loop={true}
-        navigation // Activa la navegación con flechas
-        pagination={{ clickable: true }} // Activa la paginación
-        className="rounded-lg overflow-hidden"
+        navigation
+        pagination={{ clickable: true }}
+        className="w-full h-full rounded-lg overflow-hidden"
       >
         {imageFiles.map((file, index) => (
-          <SwiperSlide key={index}>
-            <img
-              src={file}
-              alt={`Slide ${index}`}
-              className="w-full h-64 object-cover cursor-pointer"
-              onClick={() => openLightbox(index)}
-            />
+          <SwiperSlide key={index} className="w-full h-full">
+            <div className="relative w-full h-full">
+              <img
+                src={file}
+                alt={`Slide ${index}`}
+                className="w-full h-full object-cover cursor-pointer"
+                onClick={() => openLightbox(index)}
+              />
+            </div>
           </SwiperSlide>
         ))}
       </Swiper>
