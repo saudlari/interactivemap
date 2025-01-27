@@ -106,6 +106,34 @@ export default function MarkerPopup({
         }
     };
 
+    const handleShare = (platform: string) => {
+        const shareTitle = encodeURIComponent(marker.title);
+        const shareUrl = encodeURIComponent(`${window.location.origin}/marker/${marker._id}`);
+        const description = encodeURIComponent(extendedMarker?.description || '');
+        
+        let shareLink = '';
+        
+        switch (platform) {
+            case 'whatsapp':
+                shareLink = `https://wa.me/?text=${shareTitle}%20-%20${description}%20${shareUrl}`;
+                break;
+            case 'twitter':
+                shareLink = `https://twitter.com/intent/tweet?text=${shareTitle}&url=${shareUrl}`;
+                break;
+            case 'facebook':
+                shareLink = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`;
+                break;
+            case 'copy':
+                navigator.clipboard.writeText(`${window.location.origin}/marker/${marker._id}`);
+                alert('Enlace copiado al portapapeles');
+                return;
+        }
+
+        if (shareLink) {
+            window.open(shareLink, '_blank');
+        }
+    };
+
     const popupContent = (
         <div className="popup-content">
             <div className="flex flex-col items-center mb-2">
