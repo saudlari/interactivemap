@@ -24,6 +24,7 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
+  overflow-y: auto !important;
 }
 
 /* Personalización de input y textarea */
@@ -609,6 +610,18 @@ textarea {
     border-radius: 0.5rem;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   }
+
+  footer {
+    padding: 1rem 0;
+  }
+  
+  footer .container {
+    text-align: center;
+  }
+  
+  footer .flex-col > div {
+    margin-bottom: 0.5rem;
+  }
 }
 
 /* Ajustes para pantallas muy pequeñas */
@@ -773,4 +786,19 @@ textarea {
     color: #333;
     background: #f3f4f6;
     border-radius: 50%;
+}
+
+.min-h-screen {
+  min-height: 100vh;
+  height: 100vh;
+}
+
+/* Estilos para ocultar la barra de scroll pero mantener la funcionalidad */
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* WebKit */
 }

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import dynamic from 'next/dynamic';
 import VerticalNav from '../components/VerticalNav';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 // Cargar el componente Map dinámicamente solo en el cliente
 const Map = dynamic(() => import('../components/Map'), { ssr: false });
@@ -27,9 +28,9 @@ export default function Home() {
         toggleVerticalNav={toggleVerticalNav} 
         setUserLocation={setUserLocation} 
       />
-      <main className="h-[calc(100vh-60px)] w-full mt-[60px] relative">
+      <main className="h-[calc(100vh-60px-40px)] w-full mt-[60px] relative">
         {showVerticalNav && (
-          <div className="fixed top-[60px] left-0 z-50 w-full md:w-64 h-[calc(100vh-60px)] bg-gray-100 shadow-lg overflow-y-auto">
+          <div className="fixed top-[60px] left-0 z-50 w-full md:w-64 h-[calc(100vh-60px-40px)] bg-gray-100 shadow-lg overflow-y-auto">
             <VerticalNav 
               onFilterChange={handleFilterChange}
               toggleVerticalNav={toggleVerticalNav}
@@ -44,6 +45,7 @@ export default function Home() {
           />
         </div>
       </main>
+      <Footer />
     </div>
   );
 }
