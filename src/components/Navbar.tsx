@@ -1,7 +1,10 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLocationCrosshairs, faSearch, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
+import { faLocationCrosshairs, faSearch, faQuestionCircle, faSliders } from '@fortawesome/free-solid-svg-icons';
 import LocationAutocomplete from './LocationAutocomplete';
+import logoImage from '@/public/images/otraMalaga.png';
+import Image from 'next/image';
+
 
 interface NavbarProps {
   toggleVerticalNav: () => void;
@@ -34,17 +37,28 @@ const Navbar: React.FC<NavbarProps> = ({ toggleVerticalNav, setUserLocation, onO
 
   return (
     <div className="fixed top-0 left-0 right-0 h-[60px] px-4 bg-white/95 backdrop-blur-sm shadow-lg z-50 flex items-center justify-between">
-      {/* Botón de filtros en el lado izquierdo */}
-      <button
-        className="marker-form-button bg-[#f05454] text-white font-bold rounded-lg px-2 md:px-4 py-2 hover:bg-[#f36161] transition-colors duration-300 shadow-lg flex items-center justify-center text-sm md:text-base"
-        onClick={toggleVerticalNav}
-      >
-        <FontAwesomeIcon icon={faSearch} className="mr-2" />
-        <span>Filtros</span>
-      </button>
+      {/* Logo en el lado izquierdo */}
+      <div className="flex items-center">
+        <Image
+          alt="Otra Málaga"
+          src={logoImage}
+          width={200}
+          height={120}
+          className="mr-4"
+        />
+      </div>
 
-      {/* Contenedor derecho para los otros elementos */}
+      {/* Contenedor de botones en el lado derecho */}
       <div className="flex items-center space-x-2 md:space-x-4">
+        {/* Botón de filtros */}
+        <button
+          className="marker-form-button bg-[#f05454] text-white font-bold rounded-lg px-2 md:px-4 py-2 hover:bg-[#f36161] transition-colors duration-300 shadow-lg flex items-center justify-center text-sm md:text-base"
+          onClick={toggleVerticalNav}
+        >
+          <FontAwesomeIcon icon={faSliders} className="mr-0 md:mr-2" />
+          <span className="hidden md:inline">Filtros</span>
+        </button>
+
         {/* Buscador de ubicaciones */}
         <div className="flex items-center bg-white rounded-lg shadow-lg w-full md:w-auto">
           <LocationAutocomplete onSelect={handleLocationSelect} />

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react';
-import Joyride, { STATUS, CallBackProps, EVENTS } from 'react-joyride';
+import Joyride, { STATUS, CallBackProps } from 'react-joyride';
 
 interface TutorialGuideProps {
   isOpen: boolean;
@@ -58,17 +58,19 @@ const TutorialGuide: React.FC<TutorialGuideProps> = ({ isOpen, onClose }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       {showWelcome ? (
-        <div className="bg-white p-6 rounded-lg shadow-xl max-w-md">
+        <div className="bg-white p-6 rounded-lg shadow-xl max-w-md text-center">
           <h2 className="text-xl font-bold mb-4">Bienvenido a la guía tutorial</h2>
           <p className="text-gray-600 mb-4">
             Te guiaremos a través de las principales características de nuestra aplicación.
           </p>
-          <button 
-            onClick={handleStartTour}
-            className="mt-4 px-4 py-2 bg-[#004f59] text-white rounded hover:bg-[#006d7a] transition-colors duration-300 shadow-lg"
-          >
-            Comenzar Tour
-          </button>
+          <div className="flex justify-center">
+            <button 
+              onClick={handleStartTour}
+              className="mt-4 px-4 py-2 bg-[#004f59] text-white rounded hover:bg-[#006d7a] transition-colors duration-300 shadow-lg"
+            >
+              Comenzar Tour
+            </button>
+          </div>
         </div>
       ) : (
         <Joyride
