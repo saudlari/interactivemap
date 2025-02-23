@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import VerticalNav from '../components/VerticalNav';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import TutorialGuide from '../components/TutorialGuide';
 
 // Cargar el componente Map dinámicamente solo en el cliente
 const Map = dynamic(() => import('../components/Map'), { ssr: false });
@@ -13,6 +14,7 @@ export default function Home() {
   const [showVerticalNav, setShowVerticalNav] = useState(false);
   const [filters, setFilters] = useState({ category: '', subcategory: '' });
   const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+  const [showTutorial, setShowTutorial] = useState(false);
 
   const toggleVerticalNav = () => {
     setShowVerticalNav(!showVerticalNav);
@@ -26,7 +28,8 @@ export default function Home() {
     <div className="h-screen w-full overflow-hidden">
       <Navbar 
         toggleVerticalNav={toggleVerticalNav} 
-        setUserLocation={setUserLocation} 
+        setUserLocation={setUserLocation}
+        onOpenTutorial={() => setShowTutorial(true)}
       />
       <main className="h-[calc(100vh-60px-40px)] w-full mt-[60px] relative">
         {showVerticalNav && (
@@ -45,7 +48,12 @@ export default function Home() {
           />
         </div>
       </main>
-      <Footer />
+      <Footer onOpenTutorial={() => setShowTutorial(true)} />
+      
+      <TutorialGuide 
+        isOpen={showTutorial}
+        onClose={() => setShowTutorial(false)}
+      />
     </div>
   );
 }

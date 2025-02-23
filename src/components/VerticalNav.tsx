@@ -33,7 +33,6 @@ const VerticalNav: React.FC<VerticalNavProps> = ({ onFilterChange, toggleVertica
   return (
     <div className="vertical-nav flex flex-col h-full bg-gradient-to-b from-gray-100 to-gray-300">
       <div className="flex justify-between items-center p-4">
-        <span className="logo text-[#004f59] text-2xl font-bold">Logo</span>
         <button 
           onClick={toggleVerticalNav} 
           className="md:hidden text-[#004f59] p-2"

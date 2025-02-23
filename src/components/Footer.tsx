@@ -3,7 +3,11 @@ import Link from 'next/link';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub, faLinkedin, faTwitter } from '@fortawesome/free-brands-svg-icons';
 
-const Footer = () => {
+interface FooterProps {
+  onOpenTutorial: () => void;
+}
+
+const Footer: React.FC<FooterProps> = ({ onOpenTutorial }) => {
   return (
     <footer className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-sm shadow-lg z-40 py-2">
       <div className="container mx-auto px-4">

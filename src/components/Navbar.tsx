@@ -1,14 +1,15 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLocationCrosshairs, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faLocationCrosshairs, faSearch, faQuestionCircle } from '@fortawesome/free-solid-svg-icons';
 import LocationAutocomplete from './LocationAutocomplete';
 
 interface NavbarProps {
   toggleVerticalNav: () => void;
-  setUserLocation: (coords: [number, number]) => void;
+  setUserLocation: (location: [number, number] | null) => void;
+  onOpenTutorial: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ toggleVerticalNav, setUserLocation }) => {
+const Navbar: React.FC<NavbarProps> = ({ toggleVerticalNav, setUserLocation, onOpenTutorial }) => {
   const handleLocationClick = () => {
     if (!navigator.geolocation) {
       alert('La geolocalización no está soportada en tu navegador');
@@ -62,6 +63,15 @@ const Navbar: React.FC<NavbarProps> = ({ toggleVerticalNav, setUserLocation }) =
         >
           <FontAwesomeIcon icon={faLocationCrosshairs} className="mr-2" />
           <span className="hidden md:inline">Mi ubicación</span>
+        </button>
+
+        {/* Botón de Tour */}
+        <button
+          onClick={onOpenTutorial}
+          className="flex-none bg-[#f05454] text-white font-bold rounded-lg px-2 md:px-4 py-2 hover:bg-[#f36161] transition-colors duration-300 shadow-lg text-sm md:text-base"
+        >
+          <FontAwesomeIcon icon={faQuestionCircle} className="mr-2" />
+          <span className="hidden md:inline">Tour</span>
         </button>
       </div>
     </div>
